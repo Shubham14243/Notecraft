@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>NoteCraft | Home</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+  <body data-theme="lofi">
+    <div
+      class="hero min-h-screen"
+      style="
+        background-image: url(https://images.unsplash.com/photo-1542435503-956c469947f6);
+      "
+    >
+      <div class="hero-overlay"></div>
+      <div class="hero-content text-neutral-content text-center">
+        <div class="max-w-md">
+          <h1 class="mb-5 text-5xl font-bold">NoteCraft</h1>
+          <p class="mb-5">
+            A clean, powerful online note-taking platform where ideas flow in
+            Markdown and thoughts turn into beautifully structured knowledge.
+          </p>
+          <button class="btn btn-primary" {{url_for('auth.signup')}}>
+            Get Started
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </body>
+</html>

@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>NoteCraft | Notebooks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+      rel="stylesheet"
+    />
+    <link href="../static/css/style.css" rel="stylesheet" />
+  </head>
+
+  <body data-theme="lofi">
+    <!-- Navbar -->
+    <div class="navbar bg-base-100 shadow-sm">
+      <div class="navbar-start">
+        <div class="dropdown">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h7"
+              />
+            </svg>
+          </div>
+          <ul
+            tabindex="-1"
+            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
+          >
+            <li><a>Dashboard</a></li>
+            <li><a>About</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="navbar-center">
+        <a class="btn btn-ghost text-xl">NoteCraft</a>
+      </div>
+
+      <div class="navbar-end">
+        <div class="dropdown dropdown-end">
+          <div
+            tabindex="0"
+            role="button"
+            class="btn btn-ghost btn-circle avatar"
+          >
+            <div class="w-10 rounded">
+              <img
+                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+              />
+            </div>
+          </div>
+          <ul
+            tabindex="-1"
+            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
+          >
+            <li>
+              <a class="justify-between"
+                >Profile <span class="badge">New</span></a
+              >
+            </li>
+            <li><a>Settings</a></li>
+            <li><a>Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Navbar End -->
+
+    <div class="bg-gray-100 min-h-screen">
+      <!-- Main Container -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Meta Section -->
+        <div class="py-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+          <!-- Breadcrumb -->
+          <div class="breadcrumbs text-sm">
+            <ul>
+              <li><a>Home</a></li>
+              <li>Add Document</li>
+            </ul>
+          </div>
+
+          <!-- Search -->
+          <div class="flex justify-center">
+            <label class="input w-full md:w-96">
+              <svg
+                class="h-[1em] opacity-50"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <g
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                  stroke-width="2.5"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </g>
+              </svg>
+              <input type="search" placeholder="Search..." />
+            </label>
+          </div>
+
+          <!-- Create Button -->
+          <div class="flex md:justify-end">
+            <div class="dropdown dropdown-bottom dropdown-end w-full md:w-auto">
+              <div tabindex="0" role="button" class="btn btn-primary m-1">
+                Create +
+              </div>
+              <ul
+                tabindex="-1"
+                class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+              >
+                <li><a>📁 Folder</a></li>
+                <li><a>📄 File</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Folder Grid -->
+        <div
+          class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+        >
+          <div class="card bg-yellow-100 shadow-md">
+            <div class="card-body flex justify-center items-center folder-card">
+              <h2 class="card-title text-xl flex items-center gap-2">
+                📁 Project Notes
+              </h2>
+            </div>
+          </div>
+
+          <div class="card bg-yellow-100 shadow-md">
+            <div class="card-body flex justify-center items-center folder-card">
+              <h2 class="card-title text-xl flex items-center gap-2">
+                📁 Personal
+              </h2>
+            </div>
+          </div>
+
+          <div class="card bg-yellow-100 shadow-md">
+            <div class="card-body flex justify-center items-center folder-card">
+              <h2 class="card-title text-xl flex items-center gap-2">
+                📁 Research
+              </h2>
+            </div>
+          </div>
+
+          <div class="card bg-yellow-100 shadow-md">
+            <div class="card-body flex justify-center items-center folder-card">
+              <h2 class="card-title text-xl flex items-center gap-2">📁 New</h2>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider my-10"></div>
+
+        <!-- File Grid -->
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-10"
+        >
+          <div class="card bg-blue-200 shadow-md">
+            <div class="card-body flex justify-center items-center file-card">
+              <h2 class="card-title text-xl flex items-center gap-2">
+                📄 File Markdown
+              </h2>
+            </div>
+          </div>
+
+          <div class="card bg-blue-200 shadow-md">
+            <div class="card-body flex justify-center items-center file-card">
+              <h2 class="card-title text-xl flex items-center gap-2">
+                📄 Meeting Notes
+              </h2>
+            </div>
+          </div>
+
+          <div class="card bg-blue-200 shadow-md">
+            <div class="card-body flex justify-center items-center file-card">
+              <h2 class="card-title text-xl flex items-center gap-2">
+                📄 Ideas
+              </h2>
+            </div>
+          </div>
+
+          <div class="card bg-blue-200 shadow-md">
+            <div class="card-body flex justify-center items-center file-card">
+              <h2 class="card-title text-xl flex items-center gap-2">
+                📄 Rough
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </body>
+</html>
