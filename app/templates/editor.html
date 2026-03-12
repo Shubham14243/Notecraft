@@ -1,0 +1,461 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>NoteCraft - Markdown Editor</title>
+    <!-- Tailwind CSS v3 with Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts for NoteCraft Experience -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+              serif: ["Libre Baskerville", "serif"],
+            },
+            colors: {
+              zen: {
+                bg: "#fdfcfb",
+                sidebar: "#f4f2f0",
+                border: "#e5e1de",
+                text: "#2c2c2c",
+                accent: "#5a5a5a",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style data-purpose="custom-scrollbar">
+      /* Custom thin scrollbar for a cleaner look */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #d1d1d1;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #b1b1b1;
+      }
+    </style>
+    <style data-purpose="markdown-preview-styles">
+      /* Styles for the rendered markdown preview side */
+      #preview-area h1 {
+        @apply text-3xl font-serif font-bold mb-4 mt-2;
+      }
+
+      #preview-area h2 {
+        @apply text-2xl font-serif font-semibold mb-3 mt-6;
+      }
+
+      #preview-area h3 {
+        @apply text-xl font-serif font-semibold mb-2 mt-4;
+      }
+
+      #preview-area p {
+        @apply mb-4 leading-relaxed font-serif text-lg text-gray-800;
+      }
+
+      #preview-area ul {
+        @apply list-disc list-inside mb-4 ml-4 font-serif;
+      }
+
+      #preview-area ol {
+        @apply list-decimal list-inside mb-4 ml-4 font-serif;
+      }
+
+      #preview-area blockquote {
+        @apply border-l-4 border-gray-300 pl-4 italic my-4 text-gray-600;
+      }
+
+      #preview-area code {
+        @apply bg-gray-100 px-1 rounded font-mono text-sm;
+      }
+
+      #preview-area pre {
+        @apply bg-gray-100 p-4 rounded-lg font-mono text-sm overflow-x-auto my-4;
+      }
+
+      #preview-area a {
+        @apply text-blue-600 underline;
+      }
+    </style>
+  </head>
+
+  <body
+    class="bg-zen-bg text-zen-text font-sans h-screen flex overflow-hidden"
+    onload="content_update()"
+  >
+    <!-- BEGIN: Sidebar Navigation -->
+    <aside
+      class="w-64 bg-zen-sidebar border-r border-zen-border flex flex-col h-full transition-all duration-300"
+      data-purpose="main-sidebar"
+    >
+      <div class="p-6 flex items-center gap-3 border-b border-zen-border">
+        <div
+          class="w-8 h-8 bg-black rounded flex items-center justify-center text-white"
+        >
+          <svg
+            class="w-5 h-5 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewbox="0 0 24 24"
+          >
+            <path
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            ></path>
+          </svg>
+        </div>
+        <h1 class="font-semibold text-lg tracking-tight">NoteCraft</h1>
+      </div>
+      <nav
+        class="flex-1 overflow-y-auto py-3 px-3"
+        data-purpose="sidebar-links"
+      >
+        <div class="mb-6">
+          <p
+            class="text-xs uppercase tracking-widest text-gray-700 font-bold px-3 mb-2"
+          >
+            Editor Components
+          </p>
+          <hr />
+          <ul class="space-y-1">
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="h1"
+              >
+                <i class="bi bi-type-h1"></i> <span>Heading 1</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="h2"
+              >
+                <i class="bi bi-type-h2"></i> <span>Heading 2</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="h3"
+              >
+                <i class="bi bi-type-h3"></i> <span>Heading 3</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="bold"
+              >
+                <i class="bi bi-type-bold"></i> <span>Bold</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="italic"
+              >
+                <i class="bi bi-type-italic"></i> <span>Italic</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="highlight"
+              >
+                <i class="bi bi-highlights"></i>
+                <span>Highlight</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="strikethrough"
+              >
+                <i class="bi bi-type-strikethrough"></i>
+                <span>Strikethrough</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="blockquote"
+              >
+                <i class="bi bi-quote"></i>
+                <span>Blockquote</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="subscript"
+              >
+                <i class="bi bi-subscript"></i>
+                <span>Subscript</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="superscript"
+              >
+                <i class="bi bi-superscript"></i>
+                <span>Superscript</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="hr"
+              >
+                <i class="bi bi-dash"></i>
+                <span>Horizontal Rule</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="ol"
+              >
+                <i class="bi bi-list-ol"></i>
+                <span>Ordered List</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="ul"
+              >
+                <i class="bi bi-list-ul"></i>
+                <span>Unordered List</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="tasklist"
+              >
+                <i class="bi bi-list-check"></i>
+                <span>Task List</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="code"
+              >
+                <i class="bi bi-code"></i>
+                <span>Code</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="codebolock"
+              >
+                <i class="bi bi-code-slash"></i>
+                <span>Code Block</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="link"
+              >
+                <i class="bi bi-link-45deg"></i>
+                <span>Link</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="image"
+              >
+                <i class="bi bi-image"></i>
+                <span>Image</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex w-full items-center gap-3 px-3 py-2 rounded-md bg-white shadow-sm border border-zen-border text-sm font-medium"
+                id="table"
+              >
+                <i class="bi bi-table"></i>
+                <span>Table</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+    <!-- END: Sidebar Navigation -->
+    <!-- BEGIN: Main Editor Content -->
+    <main class="flex-1 flex flex-col h-full bg-white relative">
+      <!-- BEGIN: Toolbar -->
+      <header
+        class="h-14 border-b border-zen-border flex items-center justify-between px-6 bg-zen-bg/50 backdrop-blur-md z-10"
+        data-purpose="editor-toolbar"
+      >
+        <div class="flex items-center gap-1 text-gray-500">
+          <!-- Formatting buttons -->
+          <a
+            href="{{ url_for('main.home') if session.get('current_folder_id') == 0 else url_for('folder.view_folder', folder_id=session.get('current_folder_id')) }}"
+            class="p-2 hover:bg-gray-200 rounded transition-colors"
+            title="Code"
+          >
+            <svg
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+              width="18"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </a>
+          <strong class="text-black">{{ file.title }}</strong
+          ><span class="text-xs text-gray-700 font-medium italic pl-4"
+            >Last Updated: {{file.updated_at.strftime('%Y-%m-%d %H:%M')}}</span
+          >
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            class="px-5 py-1.5 bg-black text-white rounded text-sm font-semibold hover:bg-gray-800 transition-all shadow-sm"
+            onclick="test()"
+          >
+            Download Markdown
+          </button>
+          <form
+            action="{{ url_for('file.save_file', file_id=file.id) }}"
+            method="POST"
+          >
+            <input type="hidden" name="type" value="continue" />
+            <textarea
+              style="display: none"
+              name="content"
+              id="content1"
+            ></textarea>
+            <button
+              class="px-5 py-1.5 bg-black text-white rounded text-sm font-semibold hover:bg-gray-800 transition-all shadow-sm"
+            >
+              Save and Continue Edit
+            </button>
+          </form>
+          <form
+            action="{{ url_for('file.save_file', file_id=file.id) }}"
+            method="POST"
+          >
+            <input type="hidden" name="type" value="exit" />
+            <textarea
+              style="display: none"
+              name="content"
+              id="content2"
+            ></textarea>
+            <button
+              class="px-5 py-1.5 bg-black text-white rounded text-sm font-semibold hover:bg-gray-800 transition-all shadow-sm"
+            >
+              Save and Exit
+            </button>
+          </form>
+        </div>
+      </header>
+      <!-- END: Toolbar -->
+      <!-- BEGIN: Workspace Split -->
+      <div
+        class="flex-1 flex overflow-hidden"
+        data-purpose="editor-split-container"
+      >
+        <!-- Raw Markdown Input (Left Half) -->
+        <section
+          class="flex-1 border-r border-zen-border relative h-full flex flex-col"
+          data-purpose="markdown-input-container"
+        >
+          <textarea
+            class="flex-1 w-full p-4 resize-none border-none focus:ring-0 font-mono text-base text-gray-700 bg-transparent"
+            id="markdown-input"
+            placeholder="Start writing in markdown..."
+            spellcheck="false"
+            onchange="content_update()"
+          >
+{{file.content if file.content else 'Select the Component to add!'}}</textarea
+          >
+        </section>
+        <!-- Rendered Preview (Right Half) -->
+        <section
+          class="flex-1 h-full overflow-y-auto bg-zen-bg/30 p-10"
+          data-purpose="markdown-preview-container"
+        >
+          <div class="max-w-prose mx-auto" id="preview-area">
+            <h1>Project Roadmap</h1>
+            <p>
+              This is a live <strong>markdown</strong> preview. ZenEdit is
+              designed for a focused writing experience.
+            </p>
+            <h2>Key Features</h2>
+            <ul>
+              <li>Semantic HTML5 structure</li>
+              <li><strong>Split-pane</strong> live rendering</li>
+              <li>Custom typography for maximum readability</li>
+              <li>Clean, minimal "Zen" interface</li>
+            </ul>
+            <h3>Future Goals</h3>
+            <ul>
+              <li>[ ] Dark mode toggle</li>
+              <li>[ ] Cloud sync integration</li>
+              <li>[ ] Export to PDF / HTML</li>
+            </ul>
+            <blockquote>
+              "The true art of writing is to express the greatest possible
+              meaning in the fewest possible words."
+            </blockquote>
+          </div>
+        </section>
+      </div>
+      <!-- END: Workspace Split -->
+    </main>
+    <!-- END: Main Editor Content -->
+    <script>
+      function content_update() {
+        let val = document.getElementById("markdown-input").value;
+        document.getElementById("content1").value = val;
+        document.getElementById("content2").value = val;
+      }
+
+      function test() {
+        document.getElementById("markdown-input").value =
+          document.getElementById("markdown-input").value + "\n\naabbdd";
+      }
+    </script>
+  </body>
+</html>

@@ -1,215 +1,658 @@
 <!doctype html>
-<html>
+
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>NoteCraft | Notebooks</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>NoteCraft - Dashboard</title>
+    <!-- Tailwind CSS CDN with plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Lucide Icons (via CDN for visual representation of icons) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Font: Inter -->
     <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
       rel="stylesheet"
     />
-    <link href="../static/css/style.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+    <style data-purpose="custom-scrollbar">
+      /* Custom scrollbar for a cleaner UI */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #9ca3af;
+      }
+    </style>
+    <style data-purpose="card-animations">
+      /* Subtle hover effect for notes/folders */
+      .note-item {
+        transition:
+          transform 0.15s ease-in-out,
+          box-shadow 0.15s ease-in-out;
+      }
+      .note-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+    </style>
   </head>
-
-  <body data-theme="lofi">
-    <!-- Navbar -->
-    <div class="navbar bg-base-100 shadow-sm">
-      <div class="navbar-start">
-        <div class="dropdown">
-          <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h7"
-              />
-            </svg>
-          </div>
-          <ul
-            tabindex="-1"
-            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
-          >
-            <li><a>Dashboard</a></li>
-            <li><a>About</a></li>
-          </ul>
+  <body class="bg-white text-black font-sans antialiased">
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="mx-auto flash-msg">
+      {% for category, message in messages %}
+      <div class="toast toast-bottom toast-end">
+        <div class="alert alert-{{category}} shadow-lg">
+          <span>{{ message }}</span>
         </div>
       </div>
-
-      <div class="navbar-center">
-        <a class="btn btn-ghost text-xl">NoteCraft</a>
-      </div>
-
-      <div class="navbar-end">
-        <div class="dropdown dropdown-end">
-          <div
-            tabindex="0"
-            role="button"
-            class="btn btn-ghost btn-circle avatar"
-          >
-            <div class="w-10 rounded">
-              <img
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-              />
-            </div>
-          </div>
-          <ul
-            tabindex="-1"
-            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
-          >
-            <li>
-              <a class="justify-between"
-                >Profile <span class="badge">New</span></a
-              >
-            </li>
-            <li><a>Settings</a></li>
-            <li><a>Logout</a></li>
-          </ul>
-        </div>
-      </div>
+      {% endfor %}
     </div>
-    <!-- Navbar End -->
+    <script>
+      setTimeout(() => {
+        document.querySelectorAll(".flash-msg").forEach((el) => {
+          el.style.transition = "display 0.5s";
+          el.style.opacity = "none";
+          setTimeout(() => el.remove(), 500);
+        });
+      }, 5000);
+    </script>
+    {% endif %} {% endwith %}
 
-    <div class="bg-gray-100 min-h-screen">
-      <!-- Main Container -->
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Meta Section -->
-        <div class="py-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-          <!-- Breadcrumb -->
-          <div class="breadcrumbs text-sm">
-            <ul>
-              <li><a>Home</a></li>
-              <li>Add Document</li>
-            </ul>
-          </div>
-
-          <!-- Search -->
-          <div class="flex justify-center">
-            <label class="input w-full md:w-96">
+    <div class="flex h-screen overflow-hidden">
+      <!-- BEGIN: Sidebar Navigation -->
+      <aside
+        class="w-64 bg-white border-r border-gray-100 flex flex-col"
+        data-purpose="sidebar"
+      >
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-8">
+            <div class="bg-black p-2 rounded">
               <svg
-                class="h-[1em] opacity-50"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
+                class="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
               >
-                <g
-                  stroke-linejoin="round"
+                <path
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                   stroke-linecap="round"
-                  stroke-width="2.5"
-                  fill="none"
-                  stroke="currentColor"
-                >
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.3-4.3"></path>
-                </g>
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path>
               </svg>
-              <input type="search" placeholder="Search..." />
-            </label>
+            </div>
+            <a href="{{url_for('main.home')}}">
+              <h1 class="font-bold text-xl tracking-tight">NoteCraft</h1>
+            </a>
           </div>
+          <nav class="space-y-1">
+            <!-- Main Links -->
+            <a
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-black bg-gray-100 rounded group"
+              href="#"
+            >
+              <i class="w-4 h-4" data-lucide="layout-grid"></i>
+              All Notes
+            </a>
+            <a
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-black rounded group"
+              href="#"
+            >
+              <i class="w-4 h-4" data-lucide="star"></i>
+              Favorites
+            </a>
+            <a
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-black rounded group"
+              href="#"
+            >
+              <i class="w-4 h-4" data-lucide="trash-2"></i>
+              Trash
+            </a>
+          </nav>
+        </div>
+        <!-- User Profile at bottom -->
+        <div class="mt-auto p-4 border-t border-gray-100">
+          <div class="flex items-center gap-3">
+            <img
+              alt="User Avatar"
+              class="w-10 h-10 rounded border border-gray-100"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAOiJsueXQycv91Tlf-Pyd5ZHNuzIIUNDrQV2KDpIVlSDpUW_RM019FRAz4ZRnt4jPlAmTkxtU6RF4V4zCVE9XpZH1F9M59w4sXkFdbtNY0PB72IuwV4JD6d5iQEYBz8mUUllurkRn8ALIR59_yrDFklnaVN1CEmQdfIpqYIYEuLyX0v6wcv0c6WFNGV-QVm6UiJs2LtxXZfwkA_0HY7z3PwsxPpPKcWbKH0KMOHNz-5_7fmWKh_YWHUxGj_QU9noDeQ32hAjr41f2"
+            />
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-black truncate">Alex Rivera</p>
+              <p class="text-xs text-gray-500 truncate">Pro Plan</p>
+            </div>
+            <button class="text-gray-400 hover:text-black">
+              <i class="w-4 h-4" data-lucide="settings"></i>
+            </button>
+          </div>
+        </div>
+      </aside>
+      <!-- END: Sidebar Navigation -->
+      <!-- BEGIN: Main Content Area -->
+      <main
+        class="flex-1 flex flex-col min-w-0 bg-white"
+        data-purpose="main-content"
+      >
+        <!-- Top Bar: Breadcrumbs & Actions -->
+        <header
+          class="h-16 border-b border-gray-100 flex items-center justify-between px-8 bg-white/80 backdrop-blur-md sticky top-0 z-10"
+        >
+          <!-- Breadcrumb -->
+          <nav
+            aria-label="Breadcrumb"
+            class="flex items-center text-sm font-medium text-gray-500"
+          >
+            <ol class="flex items-center space-x-2">
+              {% for item in session.path %}
 
-          <!-- Create Button -->
-          <div class="flex md:justify-end">
-            <div class="dropdown dropdown-bottom dropdown-end w-full md:w-auto">
-              <div tabindex="0" role="button" class="btn btn-primary m-1">
-                Create +
+              <li>
+                {% if not loop.last %}
+                <a
+                  class="hover:text-black"
+                  href="{{ url_for('folder.view_folder', folder_id=item.id) }}"
+                >
+                  {{ item.name }}
+                </a>
+                {% else %}
+                <span class="text-black font-semibold">{{ item.name }}</span>
+                {% endif %}
+              </li>
+
+              {% if not loop.last %}
+              <li>
+                <i class="w-4 h-4" data-lucide="chevron-right"></i>
+              </li>
+              {% endif %} {% endfor %}
+            </ol>
+          </nav>
+          <!-- Actions -->
+          <div class="flex items-center gap-3">
+            <!-- Search -->
+            <div class="relative mr-2">
+              <i
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-700"
+                data-lucide="search"
+              ></i>
+              <input
+                id="noteSearch"
+                class="pl-10 pr-4 py-1.5 border border-gray-100 rounded text-sm focus:ring-1 focus:ring-black focus:border-black w-64 bg-gray-50/50"
+                placeholder="Search notes..."
+                type="text"
+              />
+            </div>
+            <!-- Dark Mode Toggle -->
+            <button
+              class="p-2 text-gray-500 hover:bg-gray-100 rounded transition-colors mr-2"
+              title="Toggle Dark Mode"
+            >
+              <i class="w-4 h-4" data-lucide="moon"></i>
+            </button>
+            <button
+              class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black bg-white border border-gray-200 rounded hover:bg-gray-50 shadow-sm transition-colors"
+              onclick="folder_create_modal.showModal()"
+            >
+              <i class="w-4 h-4" data-lucide="folder-plus"></i>
+              New Folder
+            </button>
+            <dialog id="folder_create_modal" class="modal">
+              <div class="modal-box">
+                <form method="dialog">
+                  <button
+                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                  >
+                    ✕
+                  </button>
+                </form>
+                <h3 class="text-lg font-bold">Create Folder</h3>
+                <form
+                  action="{{ url_for('folder.create_folder') }}"
+                  class="space-y-6 py-4"
+                  method="POST"
+                >
+                  <input
+                    type="hidden"
+                    name="parent_id"
+                    value="{{ user.root_folder_id if session.get('current_folder_id') == 0 else session.get('current_folder_id') }}"
+                  />
+                  <div>
+                    <div class="mt-1">
+                      <input
+                        autocomplete="folder-name"
+                        class="block w-full appearance-none rounded-lg border border-neutral-300 px-3 py-3 placeholder-neutral-400 shadow-sm focus:border-neutral-900 focus:outline-none focus:ring-neutral-900 sm:text-sm"
+                        id="folder_name"
+                        name="folder_name"
+                        placeholder="Enter folder name"
+                        required=""
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <button
+                      class="flex w-full justify-center rounded-lg bg-neutral-900 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 transition-all"
+                      type="submit"
+                    >
+                      Create Folder
+                    </button>
+                  </div>
+                </form>
               </div>
-              <ul
-                tabindex="-1"
-                class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+            </dialog>
+            <button
+              class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-black rounded hover:bg-zinc-800 shadow-sm transition-colors"
+              onclick="note_create_modal.showModal()"
+            >
+              <i class="w-4 h-4" data-lucide="plus"></i>
+              New Note
+            </button>
+            <dialog id="note_create_modal" class="modal">
+              <div class="modal-box">
+                <form method="dialog">
+                  <button
+                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                  >
+                    ✕
+                  </button>
+                </form>
+                <h3 class="text-lg font-bold">Create Note</h3>
+                <form
+                  action="{{ url_for('file.create_file') }}"
+                  class="space-y-6 py-4"
+                  method="POST"
+                >
+                  <input
+                    type="hidden"
+                    name="folder_id"
+                    value="{{ user.root_folder_id if session.get('current_folder_id') == 0 else session.get('current_folder_id') }}"
+                  />
+                  <div>
+                    <div class="mt-1">
+                      <input
+                        autocomplete="file-name"
+                        class="block w-full appearance-none rounded-lg border border-neutral-300 px-3 py-3 placeholder-neutral-400 shadow-sm focus:border-neutral-900 focus:outline-none focus:ring-neutral-900 sm:text-sm"
+                        id="file_name"
+                        name="file_name"
+                        placeholder="Enter Note Name"
+                        required=""
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <button
+                      class="flex w-full justify-center rounded-lg bg-neutral-900 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 transition-all"
+                      type="submit"
+                    >
+                      Create Note
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </dialog>
+            <a
+              href="{{ url_for('auth.logout') }}"
+              class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-black rounded hover:bg-zinc-800 shadow-sm transition-colors"
+            >
+              Logout
+            </a>
+          </div>
+        </header>
+        <!-- Grid Content -->
+        <div
+          class="flex-1 overflow-y-auto p-8"
+          data-purpose="scrollable-content"
+        >
+          {% if folders %}
+          <!-- Folder Section -->
+          <section class="mb-10">
+            <h2
+              class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4"
+            >
+              Folders
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <!-- Folder Item 1 -->
+              {% for folder in folders %}
+              <div
+                class="note-item flex items-center p-4 bg-yellow-50 border border-gray-100 rounded cursor-pointer group"
+                data-search="{{ folder.name | lower }}"
               >
-                <li><a>📁 Folder</a></li>
-                <li><a>📄 File</a></li>
-              </ul>
+                <div class="bg-gray-100 p-2 rounded mr-4">
+                  <i class="w-5 h-5 text-black" data-lucide="folder"></i>
+                </div>
+                <div class="flex-1">
+                  <a
+                    href="{{ url_for('folder.view_folder', folder_id=folder.id) }}"
+                  >
+                    <h3 class="text-sm font-semibold text-black">
+                      {{ folder.name }}
+                    </h3>
+                  </a>
+                  <p class="text-xs text-gray-500">
+                    {{folder.created_at.strftime('%Y-%m-%d %H:%M')}}
+                  </p>
+                </div>
+                <div class="dropdown dropdown-end">
+                  <div tabindex="0" role="button" class="m-1">
+                    <i
+                      class="w-4 h-4 text-gray-900 opacity-0 group-hover:opacity-100"
+                      data-lucide="more-vertical"
+                    ></i>
+                  </div>
+                  <ul
+                    tabindex="-1"
+                    class="dropdown-content menu bg-base-300 rounded-box z-1 w-52 p-2 shadow-sm"
+                  >
+                    <li>
+                      <a
+                        href="#"
+                        onclick="folder_rename{{ folder.id }}.showModal()"
+                        >Rename</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        onclick="folder_delete{{ folder.id }}.showModal()"
+                        >Delete</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Rename Modal -->
+              <dialog id="folder_rename{{ folder.id }}" class="modal">
+                <div class="modal-box">
+                  <form method="dialog">
+                    <button
+                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    >
+                      ✕
+                    </button>
+                  </form>
+                  <h3 class="text-lg font-bold">Rename Folder</h3>
+                  <form
+                    action="{{ url_for('folder.update_folder') }}"
+                    class="space-y-6 py-2"
+                    method="POST"
+                  >
+                    <input
+                      type="hidden"
+                      name="folder_id"
+                      value="{{ folder.id }}"
+                    />
+                    <div>
+                      <div class="mt-1">
+                        <input
+                          autocomplete="folder-name"
+                          class="block w-full appearance-none rounded-lg border border-neutral-300 px-3 py-3 placeholder-neutral-400 shadow-sm focus:border-neutral-900 focus:outline-none focus:ring-neutral-900 sm:text-sm"
+                          id="folder_name"
+                          name="folder_name"
+                          placeholder="Enter folder name"
+                          required=""
+                          type="text"
+                          value="{{ folder.name }}"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        class="flex w-full justify-center rounded-lg bg-neutral-900 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 transition-all"
+                        type="submit"
+                      >
+                        Rename Folder
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </dialog>
+
+              <!-- Delete Modal -->
+              <dialog id="folder_delete{{ folder.id }}" class="modal">
+                <div class="modal-box">
+                  <form method="dialog">
+                    <button
+                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    >
+                      ✕
+                    </button>
+                  </form>
+                  <h3 class="text-lg font-bold">Delete Folder</h3>
+                  <form
+                    action="{{ url_for('folder.delete_folder') }}"
+                    class="space-y-6 py-2"
+                    method="POST"
+                  >
+                    <input
+                      type="hidden"
+                      name="folder_id"
+                      value="{{ folder.id }}"
+                    />
+                    <p>
+                      Are you sure you want to delete the folder -
+                      <strong>{{ folder.name }}</strong>?
+                    </p>
+                    <div>
+                      <button
+                        class="flex w-full justify-center rounded-lg bg-neutral-900 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 transition-all"
+                        type="submit"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </dialog>
+              {% endfor %}
             </div>
-          </div>
+          </section>
+          {% endif %} {% if files %}
+          <!-- Notes Section -->
+          <section>
+            <div class="flex items-center justify-between mb-4">
+              <h2
+                class="text-sm font-semibold text-gray-900 uppercase tracking-wider"
+              >
+                Recent Notes
+              </h2>
+            </div>
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            >
+              <!-- Note Card 1 -->
+              {% for file in files %}
+              <div
+                class="note-item flex flex-col p-5 border border-gray-100 bg-blue-50 rounded cursor-pointer h-56 relative group"
+                data-search="{{ (file.title ~ ' ' ~ file.content)|lower }}"
+              >
+                <div class="flex items-start justify-between items-center mb-3">
+                  <div class="bg-gray-50 p-2 rounded">
+                    <i class="w-5 h-5 text-black" data-lucide="file-text"></i>
+                  </div>
+                  <div class="flex flex-row items-center gap-4">
+                    <button
+                      class="text-blue-300 hover:text-black transition-colors"
+                    >
+                      <i class="w-4 h-4 fill-current" data-lucide="star"></i>
+                    </button>
+                    <div class="dropdown dropdown-end">
+                      <div tabindex="0" role="button" class="m-1">
+                        <i
+                          class="w-4 h-4 text-gray-900 opacity-80 group-hover:opacity-100"
+                          data-lucide="more-vertical"
+                        ></i>
+                      </div>
+                      <ul
+                        tabindex="-1"
+                        class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                      >
+                        <li>
+                          <a
+                            href="#"
+                            onclick="file_rename{{file.id}}.showModal()"
+                            >Rename</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onclick="file_delete{{file.id}}.showModal()"
+                            >Delete</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <h3 class="font-bold text-black mb-2 truncate">
+                  <a href="{{ url_for('file.edit_file', file_id=file.id) }}"
+                    >{{file.title}}</a
+                  >
+                </h3>
+                <p class="text-sm text-gray-600 line-clamp-4 leading-relaxed">
+                  {{ file.content|trim|truncate(50, True, '...') if
+                  file.content|trim else 'No Content' }}
+                </p>
+                <div
+                  class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50"
+                >
+                  <span class="text-[10px] font-medium text-gray-700 uppercase"
+                    >{{file.updated_at.strftime('%Y-%m-%d %H:%M')}}</span
+                  >
+                </div>
+              </div>
+
+              <!-- Rename Modal -->
+              <dialog id="file_rename{{ file.id }}" class="modal">
+                <div class="modal-box">
+                  <form method="dialog">
+                    <button
+                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    >
+                      ✕
+                    </button>
+                  </form>
+                  <h3 class="text-lg font-bold">Rename File</h3>
+                  <form
+                    action="{{ url_for('file.rename_file') }}"
+                    class="space-y-6 py-2"
+                    method="POST"
+                  >
+                    <input type="hidden" name="file_id" value="{{ file.id }}" />
+                    <div>
+                      <div class="mt-1">
+                        <input
+                          autocomplete="file-name"
+                          class="block w-full appearance-none rounded-lg border border-neutral-300 px-3 py-3 placeholder-neutral-400 shadow-sm focus:border-neutral-900 focus:outline-none focus:ring-neutral-900 sm:text-sm"
+                          id="file_name"
+                          name="file_name"
+                          placeholder="Enter file name"
+                          required=""
+                          type="text"
+                          value="{{ file.title }}"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        class="flex w-full justify-center rounded-lg bg-neutral-900 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 transition-all"
+                        type="submit"
+                      >
+                        Rename File
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </dialog>
+
+              <!-- Delete Modal -->
+              <dialog id="file_delete{{ file.id }}" class="modal">
+                <div class="modal-box">
+                  <form method="dialog">
+                    <button
+                      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    >
+                      ✕
+                    </button>
+                  </form>
+                  <h3 class="text-lg font-bold">Delete File</h3>
+                  <form
+                    action="{{ url_for('file.delete_file') }}"
+                    class="space-y-6 py-2"
+                    method="POST"
+                  >
+                    <input type="hidden" name="file_id" value="{{ file.id }}" />
+                    <p>
+                      Are you sure you want to delete the file -
+                      <strong>{{ file.title }}</strong>?
+                    </p>
+                    <div>
+                      <button
+                        class="flex w-full justify-center rounded-lg bg-neutral-900 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 transition-all"
+                        type="submit"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </dialog>
+              {% endfor %}
+            </div>
+          </section>
+          {% endif %} {% if not files and not folders %}
+          <p class="text-center text-gray-700 mt-4">
+            No files or folders found.
+          </p>
+          {% endif %}
         </div>
-
-        <div class="divider"></div>
-
-        <!-- Folder Grid -->
-        <div
-          class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-        >
-          <div class="card bg-yellow-100 shadow-md">
-            <div class="card-body flex justify-center items-center folder-card">
-              <h2 class="card-title text-xl flex items-center gap-2">
-                📁 Project Notes
-              </h2>
-            </div>
-          </div>
-
-          <div class="card bg-yellow-100 shadow-md">
-            <div class="card-body flex justify-center items-center folder-card">
-              <h2 class="card-title text-xl flex items-center gap-2">
-                📁 Personal
-              </h2>
-            </div>
-          </div>
-
-          <div class="card bg-yellow-100 shadow-md">
-            <div class="card-body flex justify-center items-center folder-card">
-              <h2 class="card-title text-xl flex items-center gap-2">
-                📁 Research
-              </h2>
-            </div>
-          </div>
-
-          <div class="card bg-yellow-100 shadow-md">
-            <div class="card-body flex justify-center items-center folder-card">
-              <h2 class="card-title text-xl flex items-center gap-2">📁 New</h2>
-            </div>
-          </div>
-        </div>
-
-        <div class="divider my-10"></div>
-
-        <!-- File Grid -->
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-10"
-        >
-          <div class="card bg-blue-200 shadow-md">
-            <div class="card-body flex justify-center items-center file-card">
-              <h2 class="card-title text-xl flex items-center gap-2">
-                📄 File Markdown
-              </h2>
-            </div>
-          </div>
-
-          <div class="card bg-blue-200 shadow-md">
-            <div class="card-body flex justify-center items-center file-card">
-              <h2 class="card-title text-xl flex items-center gap-2">
-                📄 Meeting Notes
-              </h2>
-            </div>
-          </div>
-
-          <div class="card bg-blue-200 shadow-md">
-            <div class="card-body flex justify-center items-center file-card">
-              <h2 class="card-title text-xl flex items-center gap-2">
-                📄 Ideas
-              </h2>
-            </div>
-          </div>
-
-          <div class="card bg-blue-200 shadow-md">
-            <div class="card-body flex justify-center items-center file-card">
-              <h2 class="card-title text-xl flex items-center gap-2">
-                📄 Rough
-              </h2>
-            </div>
-          </div>
-        </div>
-      </div>
+      </main>
+      <!-- END: Main Content Area -->
     </div>
+    <script data-purpose="icon-initialization">
+      // Initialize Lucide icons
+      lucide.createIcons();
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("noteSearch");
+        const items = document.querySelectorAll(".note-item");
 
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        searchInput.addEventListener("input", function () {
+          const query = this.value.toLowerCase().trim();
+
+          items.forEach((item) => {
+            const text = item.dataset.search || "";
+
+            if (text.includes(query)) {
+              item.style.display = "";
+            } else {
+              item.style.display = "none";
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>

@@ -1,8 +1,8 @@
 """Initial Migration
 
-Revision ID: 7e6eeeb5b8a8
+Revision ID: 02dec2a5561e
 Revises: 
-Create Date: 2026-03-10 21:08:15.131811
+Create Date: 2026-03-12 20:21:57.963514
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7e6eeeb5b8a8'
+revision = '02dec2a5561e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,19 +24,21 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('parent_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['parent_id'], ['folder.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['parent_id'], ['folder.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('username', sa.String(length=80), nullable=True),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('password_hash', sa.String(length=255), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('root_folder_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['root_folder_id'], ['folder.id'], ),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
+    sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('username')
     )
     op.create_table('markdown_file',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -45,7 +47,7 @@ def upgrade():
     sa.Column('folder_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['folder_id'], ['folder.id'], ),
+    sa.ForeignKeyConstraint(['folder_id'], ['folder.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

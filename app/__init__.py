@@ -17,8 +17,14 @@ def create_app(config_class=Config):
     migrate.init_app(app, db, directory='app/migrations')
 
     from app.routes.auth import bp as auth_bp
+    from app.routes.main import bp as main_bp
+    from app.routes.folders import bp as folder_bp
+    from app.routes.files import bp as file_bp
     
     app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(main_bp)
+    app.register_blueprint(folder_bp, url_prefix='/folder')
+    app.register_blueprint(file_bp, url_prefix='/file')
     
     @app.errorhandler(404)
     def page_not_found(e):

@@ -1,54 +1,309 @@
 <!doctype html>
-<html>
+
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>NoteCraft | SignUp</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>NoteCraft | Sign Up</title>
+    <!-- BEGIN: External Scripts -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@5"
       rel="stylesheet"
       type="text/css"
     />
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
-      rel="stylesheet"
-      type="text/css"
-    />
+    <!-- END: External Scripts -->
+    <!-- BEGIN: Style Overrides -->
+    <style data-purpose="custom-typography">
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+    <style data-purpose="layout-adjustments">
+      .split-screen {
+        min-height: 100vh;
+      }
+      /* Smooth transition for form switching visual feedback */
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+    <!-- END: Style Overrides -->
   </head>
-  <body data-theme="lofi">
-    <div class="hero bg-base-200 min-h-screen">
-      <div class="hero-content flex-col lg:flex-row-reverse">
-        <div class="text-center lg:text-left mx-5">
-          <h1 class="text-5xl font-bold">SignUp!</h1>
-          <p class="py-6">
-            Your ideas deserve better notes — start with Notecraft.
+  <body class="bg-neutral-50 text-neutral-900 overflow-x-hidden">
+    <!-- BEGIN: Auth Layout Container -->
+    <main class="flex flex-col md:flex-row split-screen">
+      <!-- BEGIN: Visual Section (Image) -->
+      <section
+        class="hidden md:flex md:w-1/2 lg:w-3/5 bg-neutral-900 relative items-center justify-center overflow-hidden"
+        data-purpose="hero-image-container"
+      >
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0 z-0">
+          <img
+            alt="Minimalist workspace with notebook"
+            class="w-full h-full object-cover grayscale brightness-50"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_ehWFZnJVhyTeB5EJeH4uk24HzapPAWIjok-vLtXZvNk8LPEIkBencQOACf_s_5RyADq0u0Pf53Ut3aYZl9bgfWqqfGAmfLx4qiK4TYB13Oph-lZRxbRytkaqwIdU4-nU2gMI6m6RY0J6JqdMZJ1ykeLh5Hj3QEBM5rAc0WAkOUboYxL1CBHvYPAIvn3iWmli4BhVoDxka6uo_QqIOgeJ6tXOrCEskLJYYdS41p7dAbbNepY3UKoSGRbVmc9s6S4q14eF9xbWL3hy"
+          />
+          <div class="absolute inset-0 hero-overlay"></div>
+        </div>
+        <!-- Branding/Overlay Text -->
+        <div class="relative z-10 px-12 text-white">
+          <div class="flex items-center gap-2 mb-6">
+            <div
+              class="w-10 h-10 bg-white rounded-lg flex items-center justify-center"
+            >
+              <svg
+                class="w-6 h-6 text-black"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path>
+              </svg>
+            </div>
+            <span class="text-2xl font-bold tracking-tight">NoteCraft</span>
+          </div>
+          <h1 class="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
+            Your thoughts, <br />structured beautifully.
+          </h1>
+          <p class="text-neutral-300 text-lg max-w-md">
+            The minimalist markdown note-taking experience for deep thinkers and
+            creators.
           </p>
         </div>
-        <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-          <div class="card-body p-5">
-            <fieldset class="fieldset">
-              <label class="label text-black">Email</label>
-              <input type="email" class="input" placeholder="Email" />
-              <label class="label text-black">Password</label>
-              <input type="password" class="input" placeholder="Password" />
-              <label class="label text-black">Confirm Password</label>
-              <input
-                type="password"
-                class="input"
-                placeholder="Confirm Password"
-              />
-              <button class="btn btn-neutral mt-4 mb-2">SignUp</button>
-              <div class="text-center">
-                <a class="link link-hover">Login Instead?</a>
+        <!-- Subtle footer attribution -->
+        <div class="absolute bottom-8 left-12 text-neutral-400 text-sm">
+          © 2023 NoteCraft Inc.
+        </div>
+      </section>
+      <!-- END: Visual Section -->
+      <!-- BEGIN: Form Section -->
+      <section
+        class="flex-1 flex flex-col justify-center px-6 py-12 lg:px-24 bg-white"
+        data-purpose="form-container"
+      >
+        <!-- Mobile Branding (Only visible on small screens) -->
+        <div class="md:hidden flex items-center gap-2 mb-12">
+          <div
+            class="w-8 h-8 bg-neutral-900 rounded flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              ></path>
+            </svg>
+          </div>
+          <span class="text-xl font-bold">NoteCraft</span>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <div class="mx-auto mt-4 flash-msg">
+          {% for category, message in messages %}
+          <div class="toast toast-top toast-center">
+            <div class="alert alert-{{category}} shadow-lg">
+              <span>{{ message }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <script>
+          setTimeout(() => {
+            document.querySelectorAll(".flash-msg").forEach((el) => {
+              el.style.transition = "display 0.5s";
+              el.style.opacity = "none";
+              setTimeout(() => el.remove(), 500);
+            });
+          }, 5000);
+        </script>
+        {% endif %} {% endwith %}
+
+        <!-- BEGIN: Sign In Form -->
+        <div class="max-w-md w-full mx-auto fade-in" id="signin-section">
+          <div class="mb-10">
+            <h2 class="text-3xl font-bold tracking-tight text-neutral-900">
+              Create your account
+            </h2>
+            <p class="mt-2 text-neutral-600">
+              Start your 28-day free trial today.
+            </p>
+          </div>
+          <form
+            action="{{ url_for('auth.signup') }}"
+            class="space-y-5"
+            data-purpose="registration-form"
+            method="POST"
+          >
+            <!-- Username -->
+            <div>
+              <label
+                class="block text-sm font-medium text-zinc-700"
+                for="username"
+                >Username</label
+              >
+              <div class="mt-1">
+                <input
+                  autocomplete="username"
+                  class="block w-full px-4 py-3 border-zinc-200 rounded-lg focus:ring-black focus:border-black transition-colors duration-200"
+                  id="username"
+                  name="username"
+                  placeholder="John123"
+                  required=""
+                  type="text"
+                />
               </div>
-            </fieldset>
+            </div>
+            <!-- Email -->
+            <div>
+              <label class="block text-sm font-medium text-zinc-700" for="email"
+                >Email address</label
+              >
+              <div class="mt-1">
+                <input
+                  autocomplete="email"
+                  class="block w-full px-4 py-3 border-zinc-200 rounded-lg focus:ring-black focus:border-black transition-colors duration-200"
+                  id="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  required=""
+                  type="email"
+                />
+              </div>
+            </div>
+            <!-- Password -->
+            <div>
+              <label
+                class="block text-sm font-medium text-zinc-700"
+                for="password"
+                >Password</label
+              >
+              <div class="mt-1">
+                <input
+                  autocomplete="new-password"
+                  class="block w-full px-4 py-3 border-zinc-200 rounded-lg focus:ring-black focus:border-black transition-colors duration-200"
+                  id="password"
+                  name="password"
+                  placeholder="••••••••"
+                  required=""
+                  type="password"
+                />
+              </div>
+            </div>
+            <!-- Confirm Password -->
+            <div>
+              <label
+                class="block text-sm font-medium text-zinc-700"
+                for="confirm-password"
+                >Confirm Password</label
+              >
+              <div class="mt-1">
+                <input
+                  autocomplete="new-password"
+                  class="block w-full px-4 py-3 border-zinc-200 rounded-lg focus:ring-black focus:border-black transition-colors duration-200"
+                  id="confirm-password"
+                  name="confirm_password"
+                  placeholder="••••••••"
+                  required=""
+                  type="password"
+                />
+              </div>
+            </div>
+            <!-- Submit Button -->
+            <button
+              class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-black hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-all duration-200"
+              type="submit"
+            >
+              Create Account
+            </button>
+          </form>
+          <!-- Divider -->
+          <div class="relative py-4">
+            <div aria-hidden="true" class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-zinc-200"></div>
+            </div>
+            <div class="relative flex justify-center text-xs uppercase">
+              <span class="bg-white px-3 text-zinc-500 font-medium"
+                >Or continue with</span
+              >
+            </div>
+          </div>
+          <!-- Social Sign Up -->
+          <div data-purpose="social-auth">
+            <button
+              class="w-full inline-flex justify-center items-center py-3 px-4 rounded-lg border border-zinc-200 bg-white text-sm font-semibold text-zinc-700 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 transition-all duration-200"
+              type="button"
+            >
+              <svg
+                class="h-5 w-5 mr-3"
+                viewbox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  fill="#4285F4"
+                ></path>
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  fill="#34A853"
+                ></path>
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                  fill="#FBBC05"
+                ></path>
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  fill="#EA4335"
+                ></path>
+              </svg>
+              Sign up with Google
+            </button>
+          </div>
+          <!-- Footer Link -->
+          <p class="mt-10 text-center text-sm text-zinc-500">
+            Already have an account?
+            <a
+              class="font-semibold text-black hover:underline underline-offset-4"
+              href="{{ url_for('auth.login') }}"
+              >Sign In</a
+            >
+          </p>
+          <!-- Terms Footer -->
+          <div class="flex justify-center space-x-4 text-xs text-zinc-400 mt-8">
+            <a class="hover:text-zinc-600" href="#">Privacy Policy</a>
+            <span>•</span>
+            <a class="hover:text-zinc-600" href="#">Terms of Service</a>
           </div>
         </div>
-      </div>
-    </div>
-
+        <!-- END: Sign In Form -->
+      </section>
+      <!-- END: Form Section -->
+    </main>
+    <!-- END: Auth Layout Container -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </body>
 </html>
