@@ -36,3 +36,72 @@ def home():
         flash('An unexpected error occurred. Please try again.', 'error')
         session.clear()
         return redirect(url_for('auth.login'))
+    
+
+@bp.route('/settings', methods=['GET', 'POST'])
+def settings():
+    try:
+        if not session.get("user"):
+            return redirect(url_for("auth.login"))
+    
+        user = session.get("user")
+        
+        if request.method == "POST":
+            
+            if request.form.get("type") == "update_username":
+            
+                username = request.form.get("username")
+                
+                username_error = Validator.validate_username(username)
+                if username_error:
+                    flash(username_error, 'error')
+                    return redirect(url_for('main.settings'))
+                
+                existing_user = User.query.filter_by(username=username).first()
+                if existing_user and existing_user.id != user.get("id"):
+                    flash('Username already taken!', 'error')
+                    return redirect(url_for('main.settings'))
+                
+                user_record = User.query.get(user.get("id"))
+                user_record.username = username
+                
+                db.session.commit()
+                
+                user["username"] = username
+                session["user"] = user
+                flash('Username updated successfully!', 'success')
+                
+            elif request.form.get("type") == "update_password":
+                
+                current_password = request.form.get("current_password")
+                new_password = request.form.get("new_password")
+                confirm_password = request.form.get("confirm_password")
+                
+                if new_password != confirm_password:
+                    flash('New password and confirm password do not match!', 'error')
+                    return redirect(url_for('main.settings'))
+                
+                password_error = Validator.validate_password(new_password)
+                if password_error:
+                    flash(password_error, 'error')
+                    return redirect(url_for('main.settings'))
+                
+                user_record = User.query.get(user.get("id"))
+                
+                if not bcrypt.check_password_hash(user_record.password_hash, current_password):
+                    flash('Current password is incorrect!', 'error')
+                    return redirect(url_for('main.settings'))
+                
+                user_record.password_hash = bcrypt.generate_password_hash(new_password).decode('utf-8')
+                db.session.commit()
+                
+                flash('Password updated successfully!', 'success')
+            
+        
+        return render_template('settings.html', user=user)
+    
+    except Exception as e:
+        logger.error(f"Unexpected error in home route: {str(e)}")
+        flash('An unexpected error occurred. Please try again.', 'error')
+        session.clear()
+        return redirect(url_for('auth.login'))    

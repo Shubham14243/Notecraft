@@ -51,9 +51,8 @@ class MarkdownFile(db.Model):
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, default='')
     folder_id = db.Column(db.Integer, db.ForeignKey('folder.id'), nullable=False)
+    public_key = db.Column(db.String(255), nullable=False, unique=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
-    
-    #public key, author
     
     folder_id = db.Column(db.Integer, db.ForeignKey('folder.id', ondelete="CASCADE"), nullable=False)

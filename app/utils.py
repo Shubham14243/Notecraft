@@ -1,4 +1,5 @@
 import re
+import shortuuid
 
 class Validator:
     
@@ -41,3 +42,10 @@ class Validator:
             return None
         else:
             return 'Invalid Username! 8-25 Characters, Letters and Numbers only!'
+        
+class Generator:
+    
+    @staticmethod
+    def generate_public_key():
+        public_key = shortuuid.ShortUUID().random(length=10)
+        return public_key

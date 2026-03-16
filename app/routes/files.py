@@ -4,6 +4,7 @@ from app.utils import Validator
 from app.models import User, Folder, MarkdownFile
 from app import db
 from app import bcrypt
+from app import utils
 import logging
 
 bp = Blueprint('file', __name__)
@@ -87,7 +88,7 @@ def save_file(file_id):
                 return redirect(url_for('folder.view_folder', folder_id=session.get('current_folder_id')))
             return redirect(url_for('main.home'))
         
-        return render_template('editor.html', user=user, file=file)
+        return redirect(url_for('file.edit_file', file_id=file.id))
     
     except Exception as e:
         logger.error(f"Unexpected error in edit file route: {str(e)}")
@@ -116,6 +117,7 @@ def create_file():
         new_file = MarkdownFile(
             title=name,
             folder_id=folder_id,
+            public_key=utils.Generator.generate_public_key(),
             created_at=datetime.now(),
             updated_at=datetime.now(),
         )
