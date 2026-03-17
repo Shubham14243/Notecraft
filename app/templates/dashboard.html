@@ -124,13 +124,6 @@
               <i class="w-4 h-4" data-lucide="star"></i>
               Favorites
             </a>
-            <a
-              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-black rounded group"
-              href="#"
-            >
-              <i class="w-4 h-4" data-lucide="trash-2"></i>
-              Trash
-            </a>
           </nav>
         </div>
         <!-- User Profile at bottom -->
@@ -390,14 +383,14 @@
                     <li>
                       <a
                         href="#"
-                        onclick="folder_rename{{ folder.id }}.showModal()"
+                        onclick="folder_rename{{ folder.id }}.showModal();"
                         >Rename</a
                       >
                     </li>
                     <li>
                       <a
                         href="#"
-                        onclick="folder_delete{{ folder.id }}.showModal()"
+                        onclick="folder_delete{{ folder.id }}.showModal();"
                         >Delete</a
                       >
                     </li>
@@ -516,10 +509,43 @@
                   </div>
                   <div class="flex flex-row items-center gap-4">
                     <button
-                      class="text-black-800 hover:text-black hover:bg-blue-300 transition-colors"
+                      class="text-gray-500 hover:text-black transition-colors"
                     >
-                      <span class="text-lg"><i class="bi bi-eye"></i></span>
+                      <i class="w-4 h-4" data-lucide="star"></i>
                     </button>
+                    <button
+                      onclick="share_modal{{file.id}}.showModal()"
+                      class="text-gray-500 hover:text-black transition-colors"
+                    >
+                      <i class="bi bi-share"></i>
+                    </button>
+                    <dialog id="share_modal{{file.id}}" class="modal">
+                      <div class="modal-box">
+                        <form method="dialog">
+                          <button
+                            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                          >
+                            ✕
+                          </button>
+                        </form>
+                        <h3 class="text-lg font-bold">
+                          Share - {{ file.title }}.md
+                        </h3>
+                        <div
+                          class="flex flex-row align-center justify-between bg-gray-200 p-4 rounded mt-4"
+                        >
+                          <p class="p-4" id="share_url{{file.id}}">
+                            http://localhost:5000/file/view/{{file.public_key}}
+                          </p>
+                          <button
+                            class="p-4"
+                            onclick="navigator.clipboard.writeText(document.getElementById('share_url{{file.id}}').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerHTML='<i class=\'bi bi-copy\'></i>',1500)"
+                          >
+                            <i class="bi bi-copy"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </dialog>
                     <div class="dropdown dropdown-end">
                       <div tabindex="0" role="button" class="m-1">
                         <i
@@ -553,11 +579,11 @@
                   class="font-bold text-black mb-2 truncate cursor-pointer hover:underline"
                 >
                   <a href="{{ url_for('file.edit_file', file_id=file.id) }}"
-                    >{{file.title}}</a
-                  >
+                    >{{file.title}} <i class="bi bi-pencil-square"></i
+                  ></a>
                 </h3>
                 <p class="text-sm text-gray-600 line-clamp-4 leading-relaxed">
-                  {{ file.content|trim|truncate(50, True, '...') if
+                  {{ file.content|trim|truncate(120, True, '...') if
                   file.content|trim else 'No Content' }}
                 </p>
                 <div
@@ -566,6 +592,13 @@
                   <span class="text-[10px] font-medium text-gray-700 uppercase"
                     >{{file.updated_at.strftime('%Y-%m-%d %H:%M')}}</span
                   >
+                  <a
+                    href="{{url_for('file.view_file', file_key=file.public_key)}}"
+                    target="_blank"
+                    class="px-2 py-0.5 border border-gray-800 text-gray-800 text-[10px] font-bold rounded"
+                  >
+                    <span class="text-md">Preview</span>
+                  </a>
                 </div>
               </div>
 

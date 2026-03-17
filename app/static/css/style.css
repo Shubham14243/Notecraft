@@ -10,22 +10,22 @@
 /* Headings */
 #preview-area h1 {
     font-size: 2em;
-    margin-top: 0.67em;
-    margin-bottom: 0.67em;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
     font-weight: bold;
 }
 
 #preview-area h2 {
     font-size: 1.5em;
-    margin-top: 0.83em;
-    margin-bottom: 0.83em;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
     font-weight: bold;
 }
 
 #preview-area h3 {
     font-size: 1.17em;
-    margin-top: 1em;
-    margin-bottom: 1em;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
     font-weight: bold;
 }
 
@@ -75,13 +75,13 @@
 
 /* Lists */
 #preview-area ol {
-    margin: 1em 0;
+    margin: 0.5em 0;
     padding-left: 2em;
     list-style-type: decimal;
 }
 
 #preview-area ul {
-    margin: 1em 0;
+    margin: 0.5em 0;
     padding-left: 2em;
     list-style-type: disc;
 }
@@ -111,7 +111,8 @@
 /* Links */
 #preview-area a {
     color: #0066cc;
-    text-decoration: none;  
+    text-decoration: none;
+    margin: 0.2em 0.2em;  
 }
 
 #preview-area a:hover {
@@ -119,7 +120,7 @@
 }
 
 /* Images */
-#preview-area image {
+#preview-area img {
     max-width: 100%;
     height: auto;
     display: block;
@@ -187,6 +188,8 @@
     border-radius: 4px;
     font-size: 0.9em;
     white-space: nowrap;
+    max-width: fit-content;
+    display: inline-block;
 }
 
 /* Language badge (optional) */

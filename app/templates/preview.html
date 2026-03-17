@@ -1,0 +1,100 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>NoteCreaft | Preview</title>
+    <!-- Tailwind CSS CDN with plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries,typography"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Font: Inter -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body
+    class="bg-white text-black font-sans antialiased"
+    onload="parse_markdown()"
+  >
+    <div class="flex h-screen overflow-hidden">
+      <!-- Main Content Area -->
+      <main
+        class="flex-1 flex flex-col min-w-0 bg-white overflow-y-auto"
+        data-purpose="main-content"
+      >
+        <!-- Document Content -->
+        <article class="max-w-[1000px] mx-auto w-full px-8 py-10">
+          <!-- Metadata Header -->
+          <header class="mb-12">
+            <div class="flex flex-row items-center justify-between gap-2">
+              <h1
+                class="text-5xl font-extrabold text-black tracking-tight mb-8"
+              >
+                {{file.title}}.md
+              </h1>
+              <button
+                onclick="download_markdown()"
+                class="flex items-center text-gray-600 hover:text-gray-900 font-bold"
+              >
+                <i class="bi bi-download text-3xl"></i>
+              </button>
+            </div>
+            <div
+              class="grid grid-cols-1 md:grid-cols-3 gap-8 py-8 border-y border-gray-100"
+            >
+              <div>
+                <span
+                  class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1"
+                  >Author</span
+                >
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold">{{file.author}}</span>
+                </div>
+              </div>
+              <div>
+                <span
+                  class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1"
+                  >Created Date</span
+                >
+                <span class="text-sm font-medium text-gray-600"
+                  >{{file.created_at.strftime("%b %d, %Y, %I:%M %p")}}</span
+                >
+              </div>
+              <div>
+                <span
+                  class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1"
+                  >Updated Date</span
+                >
+                <span class="text-sm font-medium text-gray-600"
+                  >{{file.updated_at.strftime("%b %d, %Y, %I:%M %p")}}</span
+                >
+              </div>
+            </div>
+          </header>
+          <!-- Markdown Rendered Content -->
+          <section class="prose prose-zinc max-w-none">
+            <textarea style="display: none" id="markdown-input">
+{{file.content|safe}}</textarea
+            >
+            <div id="preview-area"></div>
+          </section>
+        </article>
+      </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/markdown.js') }}"></script>
+    <script data-purpose="icon-initialization">
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

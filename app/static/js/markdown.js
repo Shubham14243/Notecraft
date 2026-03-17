@@ -25,8 +25,7 @@ function parse_markdown() {
     .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
     .replace(/\*(.*?)\*/gim, "<em>$1</em>")
     .replace(/==(.*?)==/gim, "<mark>$1</mark>")
-    .replace(/~~(.*?)~~/gim, "<del>$1</del>")
-    .replace(/`([^`]+)`/gim, "<code class='code-inline'>$1</code>");
+    .replace(/~~(.*?)~~/gim, "<del>$1</del>");
 
   // BLOCK ELEMENTS
   md = md
@@ -37,6 +36,9 @@ function parse_markdown() {
   md = md.replace(/```([\s\S]*?)```/gim, (_, code) => {
     return `<pre><code>${code.trim()}</code></pre>`;
   });
+
+  // CODE INLINE
+  md = md.replace(/`([^`]+)`/gim, "<code class='code-inline'>$1</code>");
 
   // IMAGES
   md = md.replace(/!\[(.*?)\]\((.*?)\)/gim, "<img src='$2' alt='$1'>");
@@ -175,15 +177,30 @@ const components = {
 };
 
 function add_component(id) {
-  let val = textarea.value;
+  const textarea = document.getElementById("markdown-input");
 
-  if (val === "Select the Component to add!") val = "";
+  let value = textarea.value;
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
 
-  textarea.value = val + components[id];
+  const insertText = components[id];
 
+  // Insert at cursor position
+  textarea.value =
+    value.substring(0, start) + insertText + value.substring(end);
+
+  // Move cursor after inserted text
+  const newCursorPos = start + insertText.length;
+  textarea.selectionStart = textarea.selectionEnd = newCursorPos;
+
+  // Update hidden fields
   content1.value = textarea.value;
   content2.value = textarea.value;
 
+  // Focus back to textarea
+  textarea.focus();
+
+  // Re-render preview
   parse_markdown();
 }
 

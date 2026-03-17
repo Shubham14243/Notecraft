@@ -22,6 +22,11 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
     <script>
       tailwind.config = {
         theme: {
@@ -64,54 +69,34 @@
         background: #b1b1b1;
       }
     </style>
-    <style data-purpose="markdown-preview-styles">
-      /* Styles for the rendered markdown preview side */
-      #preview-area h1 {
-        @apply text-3xl font-serif font-bold mb-4 mt-2;
-      }
-
-      #preview-area h2 {
-        @apply text-2xl font-serif font-semibold mb-3 mt-6;
-      }
-
-      #preview-area h3 {
-        @apply text-xl font-serif font-semibold mb-2 mt-4;
-      }
-
-      #preview-area p {
-        @apply mb-4 leading-relaxed font-serif text-lg text-gray-800;
-      }
-
-      #preview-area ul {
-        @apply list-disc list-inside mb-4 ml-4 font-serif;
-      }
-
-      #preview-area ol {
-        @apply list-decimal list-inside mb-4 ml-4 font-serif;
-      }
-
-      #preview-area blockquote {
-        @apply border-l-4 border-gray-300 pl-4 italic my-4 text-gray-600;
-      }
-
-      #preview-area code {
-        @apply bg-gray-100 px-1 rounded font-mono text-sm;
-      }
-
-      #preview-area pre {
-        @apply bg-gray-100 p-4 rounded-lg font-mono text-sm overflow-x-auto my-4;
-      }
-
-      #preview-area a {
-        @apply text-blue-600 underline;
-      }
-    </style>
   </head>
 
   <body
     class="bg-zen-bg text-zen-text font-sans h-screen flex overflow-hidden"
     onload="content_update()"
   >
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="mx-auto mt-4 flash-msg">
+      {% for category, message in messages %}
+      <div class="toast toast-top toast-center">
+        <div class="alert alert-{{category}} shadow-lg">
+          <span>{{ message }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <script>
+      setTimeout(() => {
+        document.querySelectorAll(".flash-msg").forEach((el) => {
+          el.style.transition = "display 0.5s";
+          el.style.opacity = "none";
+          setTimeout(() => el.remove(), 500);
+        });
+      }, 5000);
+    </script>
+    {% endif %} {% endwith %}
+
     <!-- BEGIN: Sidebar Navigation -->
     <aside
       class="w-64 bg-zen-sidebar border-r border-zen-border flex flex-col h-full transition-all duration-300"
@@ -373,11 +358,13 @@
           >
         </div>
         <div class="flex items-center gap-4">
-          <button
+          <a
+            href="{{url_for('file.view_file', file_key=file.public_key)}}"
+            target="_blank"
             class="px-5 py-1.5 bg-black text-white rounded text-sm font-semibold hover:bg-gray-800 transition-all shadow-sm"
           >
             <i class="bi bi-eye"></i>
-          </button>
+          </a>
           <button
             onclick="upload_markdown()"
             class="px-5 py-1.5 bg-black text-white rounded text-sm font-semibold hover:bg-gray-800 transition-all shadow-sm"
@@ -436,7 +423,7 @@
           data-purpose="markdown-input-container"
         >
           <textarea
-            class="flex-1 w-full p-4 resize-none border-none focus:ring-0 font-mono text-base text-gray-700 bg-transparent"
+            class="flex-1 w-full p-6 resize-none border-none focus:ring-0 font-mono text-base text-gray-700 bg-transparent"
             id="markdown-input"
             placeholder="Start writing in markdown..."
             spellcheck="false"
@@ -447,7 +434,7 @@
         </section>
         <!-- Rendered Preview (Right Half) -->
         <section
-          class="flex-1 h-full overflow-y-auto bg-zen-bg/30 p-lg-4"
+          class="flex-1 h-full overflow-y-auto bg-zen-bg/30 p-6"
           data-purpose="markdown-preview-container"
         >
           <div class="max-w-prose mx-auto" id="preview-area"></div>
@@ -456,7 +443,7 @@
       <!-- END: Workspace Split -->
     </main>
     <!-- END: Main Editor Content -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="{{ url_for('static', filename='js/markdown.js') }}"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {

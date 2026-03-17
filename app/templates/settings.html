@@ -76,8 +76,8 @@
         <nav class="flex flex-col gap-1">
           <!-- Navigation Links -->
           <a
-            class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-all-custom"
-            href="#"
+            class="flex items-center gap-3 px-3 py-2 text-slate-700 hover:bg-slate-200 rounded-md transition-all-custom"
+            href="#Account"
           >
             <svg
               class="w-5 h-5"
@@ -96,8 +96,8 @@
             Account
           </a>
           <a
-            class="flex items-center gap-3 px-3 py-2 bg-indigo-50 text-gray-700 font-medium rounded-md transition-all-custom"
-            href="#"
+            class="flex items-center gap-3 px-3 py-2 text-slate-700 hover:bg-slate-200 rounded-md transition-all-custom"
+            href="#Preferences"
           >
             <svg
               class="w-5 h-5"
@@ -116,8 +116,8 @@
             Preferences
           </a>
           <a
-            class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-all-custom"
-            href="#"
+            class="flex items-center gap-3 px-3 py-2 text-slate-700 hover:bg-slate-200 rounded-md transition-all-custom"
+            href="#Security"
           >
             <svg
               class="w-5 h-5"
@@ -148,6 +148,7 @@
         </header>
         <!-- BEGIN: AccountInformationSection -->
         <section
+          id="Account"
           class="mb-12 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"
           data-purpose="account-information"
         >
@@ -204,6 +205,7 @@
         <!-- END: AccountInformationSection -->
         <!-- BEGIN: PreferencesSection -->
         <section
+          id="Preferences"
           class="mb-12 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"
           data-purpose="app-preferences"
         >
@@ -277,6 +279,7 @@
         <!-- END: PreferencesSection -->
         <!-- BEGIN: SecuritySection -->
         <section
+          id="Security"
           class="mb-12 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"
           data-purpose="security-settings"
         >
@@ -364,9 +367,50 @@
             </div>
             <button
               class="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 shadow-sm transition-all-custom"
+              onclick="delete_account_modal.showModal()"
             >
               Delete My Account
             </button>
+            <dialog id="delete_account_modal" class="modal">
+              <div class="modal-box">
+                <form method="dialog">
+                  <button
+                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                  >
+                    ✕
+                  </button>
+                </form>
+                <h3 class="text-lg font-bold">Delete Account and Data?</h3>
+                <form
+                  action="{{ url_for('main.settings') }}"
+                  class="space-y-6 py-4"
+                  method="POST"
+                >
+                  <input type="hidden" name="type" value="delete_account" />
+                  <div>
+                    <div class="mt-1">
+                      <input
+                        autocomplete="folder-name"
+                        class="block w-full appearance-none rounded-lg border border-neutral-300 px-3 py-3 placeholder-neutral-400 shadow-sm focus:border-neutral-900 focus:outline-none focus:ring-neutral-900 sm:text-sm"
+                        id="password-confirmation"
+                        name="password_confirmation"
+                        placeholder="Enter Password to Confirm Deletion"
+                        required=""
+                        type="password"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <button
+                      class="flex w-full justify-center rounded-lg bg-red-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 transition-all"
+                      type="submit"
+                    >
+                      Yes, Delete My Account
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </dialog>
           </div>
         </section>
         <!-- END: DangerZone -->

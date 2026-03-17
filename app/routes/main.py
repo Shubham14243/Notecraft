@@ -12,6 +12,14 @@ bp = Blueprint('main', __name__)
 logger = logging.getLogger(__name__)
 
 @bp.route('/', methods=['GET'])
+def landing():
+    
+    if session.get("user"):
+            return redirect(url_for("main.home"))
+    
+    return render_template('index.html')
+
+
 @bp.route('/home', methods=['GET'])
 def home():
     try:
@@ -96,6 +104,23 @@ def settings():
                 db.session.commit()
                 
                 flash('Password updated successfully!', 'success')
+                
+            elif request.form.get("type") == "delete_account":
+                
+                password = request.form.get("password_confirmation")
+                
+                user_record = User.query.get(user.get("id"))
+                
+                if not bcrypt.check_password_hash(user_record.password_hash, password):
+                    flash('Password is incorrect! Account deletion cancelled.', 'error')
+                    return redirect(url_for('main.settings'))
+                
+                db.session.delete(user_record)
+                db.session.commit()
+                
+                flash('Account and all associated data deleted successfully!', 'success')
+                session.clear()
+                return redirect(url_for('auth.login'))
             
         
         return render_template('settings.html', user=user)

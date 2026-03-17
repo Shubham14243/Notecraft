@@ -12,24 +12,18 @@ bp = Blueprint('file', __name__)
 # Set up logging
 logger = logging.getLogger(__name__)
 
-# @bp.route('/view/<int:folder_id>', methods=['GET'])
-# def view_folder(folder_id):
-#     try:
-#         if not session.get("user"):
-#             return redirect(url_for("auth.login"))
-    
-#         user = session.get("user")
+@bp.route('/view/<file_key>', methods=['GET'])
+def view_file(file_key):
+    try:
         
-#         folders = Folder.query.filter_by(user_id=user.get("id"), parent_id=folder_id).all()
-#         folders.sort(key=lambda f: f.created_at, reverse=True)
+        file_data = MarkdownFile.query.filter_by(public_key=file_key).first()
         
-#         return render_template('dashboard.html', flag="folder", user=user, folders=folders)
+        return render_template('preview.html', file=file_data)
     
-#     except Exception as e:
-#         logger.error(f"Unexpected error in view folder route: {str(e)}")
-#         flash('An unexpected error occurred. Please try again.', 'error')
-#         session.clear()
-#         return redirect(url_for('auth.login'))
+    except Exception as e:
+        logger.error(f"Unexpected error in edit file route: {str(e)}")
+        flash('An unexpected error occurred. Please try again.', 'error')
+        return redirect(url_for('main.home'))
 
 
 @bp.route('/editor/<int:file_id>', methods=['GET'])
@@ -118,6 +112,8 @@ def create_file():
             title=name,
             folder_id=folder_id,
             public_key=utils.Generator.generate_public_key(),
+            author=user.get("username"),
+            favorite=False,
             created_at=datetime.now(),
             updated_at=datetime.now(),
         )
