@@ -96,7 +96,7 @@ class SendMail:
             if data.get('recipient') == None or data.get('username') == None or data.get('reset_url') == None:
                 return False
             
-            logger.info(f'Reset-username-{data.get('username')}')
+            logger.info(f'Reset-username-{data.get("username")}')
             
             body = {
                 "template_id": "3",
