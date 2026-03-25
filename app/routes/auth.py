@@ -1,14 +1,14 @@
+import logging
 from datetime import datetime
 from flask import Blueprint, request, render_template, flash, redirect, session, url_for
-from app.utils import Validator
+
+from app.utils import Validator, Token, SendMail
 from app.models import User, Folder
 from app import db
 from app import bcrypt
-import logging
 
 bp = Blueprint('auth', __name__)
 
-# Set up logging
 logger = logging.getLogger(__name__)
 
 @bp.route('/signup', methods=['GET', 'POST'])
@@ -23,7 +23,6 @@ def signup():
             password = request.form['password']
             confirm_password = request.form['confirm_password']
             
-            # Basic validation
             if not username:
                 flash('Username is required!', 'error')
                 return redirect(url_for('auth.signup'))
@@ -36,7 +35,6 @@ def signup():
                 flash('Password is required!', 'error')
                 return redirect(url_for('auth.signup'))
             
-            # Validate inputs
             username_error = Validator.validate_username(username)
             if username_error:
                 flash(username_error, 'error')
@@ -56,17 +54,14 @@ def signup():
                 flash('Passwords do not match!', 'error')
                 return redirect(url_for('auth.signup'))
             
-            # Check for existing user within a transaction
             try:
                 existing_user = User.query.filter((User.email == email) | (User.username == username)).first()
                 if existing_user:
                     flash('Username or Email already taken!', 'error')
                     return redirect(url_for('auth.signup'))
                 
-                # Hash password
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-                # Create new user
                 new_user = User(
                     username=username,
                     email=email,
@@ -75,9 +70,8 @@ def signup():
                 )
 
                 db.session.add(new_user)
-                db.session.flush()  # Get the user ID without committing
+                db.session.flush()
 
-                # Create root folder
                 folder = Folder(
                     name=f'root_{username}',
                     user_id=new_user.id,
@@ -85,9 +79,8 @@ def signup():
                 )
 
                 db.session.add(folder)
-                db.session.flush()  # Get the folder ID without committing
+                db.session.flush()
 
-                # Update user with root folder ID
                 new_user.root_folder_id = folder.id
                 db.session.commit()
 
@@ -122,7 +115,6 @@ def login():
                 flash('Email and Password are required!', 'error')
                 return redirect(url_for('auth.login'))
             
-            # Validate inputs
             email_error = Validator.validate_email(email)
             if email_error:
                 flash(email_error, 'error')
@@ -131,7 +123,6 @@ def login():
             user = User.query.filter_by(email=email).first()
 
             if user and bcrypt.check_password_hash(user.password_hash, password):
-                # Store user info in session
                 session["user"] = {
                     "id": user.id,
                     "username": user.username,
@@ -160,13 +151,80 @@ def logout():
         if not session.get("user"):
             return redirect(url_for("auth.login"))
         
-        session.clear()  # More secure than deleting individual keys
+        session.clear()
         
         flash("Logged Out Successfully!", "success")
         return redirect(url_for("auth.login"))
     
     except Exception as e:
         logger.error(f"Error during logout: {str(e)}")
-        # Even if there's an error, we should redirect to login
         session.clear()
         return redirect(url_for("auth.login"))
+    
+    
+@bp.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+
+        user = User.query.filter_by(email=email).first()
+        
+        result = False
+
+        if user:
+            token = Token.generate_reset_token(user)
+
+            user.reset_token = token
+            db.session.commit()
+
+            reset_link = url_for('auth.reset_password', token=token, _external=True)
+
+            result = SendMail.send_email({"recipient":email, "username":user.username, "reset_url":reset_link})
+            
+        if result == True:
+            flash("If an account exists, a reset link has been sent.", "success")
+        else:
+            flash("Something went wrong! Please try again after sometime!", "error")
+        return redirect(url_for('auth.login'))
+
+    return render_template('auth/forgot.html')
+
+
+@bp.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    user_id = Token.verify_reset_token(token)
+
+    if not user_id:
+        flash("Invalid or expired reset link.", "error")
+        return redirect(url_for('auth.login'))
+
+    user = User.query.get(user_id)
+
+    if not user or user.reset_token != token:
+        flash("Invalid or expired reset link.", "error")
+        return redirect(url_for('auth.login'))
+
+    if request.method == 'POST':
+        new_password = request.form.get('password')
+        confirm_password = request.form.get('confirm')
+        
+        password_error = Validator.validate_password(new_password)
+        if password_error:
+            flash(password_error, 'error')
+            return redirect(url_for('auth.signup'))
+
+        if new_password != confirm_password:
+            flash('Passwords do not match!', 'error')
+            return redirect(url_for('auth.signup'))
+        
+        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+
+        user.password_hash = hashed_password
+        user.reset_token = None
+
+        db.session.commit()
+
+        flash("Password updated successfully. Please login.", "success")
+        return redirect(url_for('auth.login'))
+
+    return render_template('auth/reset.html', token=token)

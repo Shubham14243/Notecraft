@@ -64,21 +64,26 @@
             <div
               class="w-10 h-10 bg-white rounded-lg flex items-center justify-center"
             >
-              <svg
-                class="w-6 h-6 text-black"
-                fill="none"
-                stroke="currentColor"
-                viewbox="0 0 24 24"
-              >
-                <path
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                ></path>
-              </svg>
+              <a href="{{ url_for('main.index') }}">
+                <svg
+                  class="w-6 h-6 text-black"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path></svg
+              ></a>
             </div>
-            <span class="text-2xl font-bold tracking-tight">NoteCraft</span>
+            <a href="{{ url_for('main.index') }}">
+              <span class="text-2xl font-bold tracking-tight"
+                >NoteCraft</span
+              ></a
+            >
           </div>
           <h1 class="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
             Your thoughts, <br />structured beautifully.
@@ -104,21 +109,24 @@
           <div
             class="w-8 h-8 bg-neutral-900 rounded flex items-center justify-center"
           >
-            <svg
-              class="w-5 h-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewbox="0 0 24 24"
-            >
-              <path
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-              ></path>
-            </svg>
+            <a href="{{ url_for('main.index') }}">
+              <svg
+                class="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path></svg
+            ></a>
           </div>
-          <span class="text-xl font-bold">NoteCraft</span>
+          <a href="{{ url_for('main.index') }}">
+            <span class="text-xl font-bold">NoteCraft</span></a
+          >
         </div>
 
         {% with messages = get_flashed_messages(with_categories=true) %} {% if

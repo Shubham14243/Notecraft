@@ -37,6 +37,6 @@ def create_app(config_class=Config):
     
     @app.route('/health', methods=['GET'])
     def health_check():
-        return jsonify({"status": "okayyyy!"}), 200
+        return jsonify({"status": "Running!"}), 200
     
     return app

@@ -52,22 +52,24 @@
       >
         <div class="flex items-center gap-2 mb-4">
           <!-- App Logo Placeholder -->
+
           <div
             class="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center text-white font-bold"
           >
-            <svg
-              class="w-5 h-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewbox="0 0 24 24"
-            >
-              <path
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-              ></path>
-            </svg>
+            <a href="{{ url_for('main.home') }}">
+              <svg
+                class="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path></svg
+            ></a>
           </div>
           <h1 class="text-xl font-bold tracking-tight">
             <a href="{{ url_for('main.home') }}">NoteCraft</a>
@@ -170,7 +172,7 @@
                     >Username</label
                   >
                   <input
-                    class="w-full border-slate-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="w-full border-slate-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                     id="full-name"
                     name="username"
                     type="text"
@@ -184,7 +186,7 @@
                     >Email Address</label
                   >
                   <input
-                    class="w-full border-slate-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="w-full border-slate-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                     id="email-address"
                     type="email"
                     value="{{user.email}}"
@@ -195,7 +197,7 @@
             </div>
             <div class="px-6 py-4 bg-slate-50 flex justify-end">
               <button
-                class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 shadow-sm transition-all-custom"
+                class="bg-gray-800 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 shadow-sm transition-all-custom"
               >
                 Save Changes
               </button>
@@ -226,7 +228,7 @@
               </div>
               <div class="flex bg-slate-100 p-1 rounded-lg">
                 <button
-                  class="px-4 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-indigo-600"
+                  class="px-4 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-gray-600"
                 >
                   Light
                 </button>
@@ -246,7 +248,7 @@
                 </p>
               </div>
               <select
-                class="w-32 border-slate-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="w-32 border-slate-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
               >
                 <option>Small</option>
                 <option selected="">Medium</option>
@@ -270,7 +272,7 @@
                   value=""
                 />
                 <div
-                  class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"
+                  class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gray-600"
                 ></div>
               </label>
             </div>
@@ -300,7 +302,7 @@
                     >Current Password</label
                   >
                   <input
-                    class="w-full border-slate-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="w-full border-slate-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                     id="current-password"
                     name="current_password"
                     type="password"
@@ -313,7 +315,7 @@
                     >New Password</label
                   >
                   <input
-                    class="w-full border-slate-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="w-full border-slate-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                     id="new-password"
                     name="new_password"
                     type="password"
@@ -326,7 +328,7 @@
                     >Confirm New Password</label
                   >
                   <input
-                    class="w-full border-slate-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="w-full border-slate-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                     id="confirm-password"
                     name="confirm_password"
                     type="password"
@@ -427,10 +429,10 @@
       themeButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
           themeButtons.forEach((b) => {
-            b.classList.remove("bg-white", "shadow-sm", "text-indigo-600");
+            b.classList.remove("bg-white", "shadow-sm", "text-gray-600");
             b.classList.add("text-slate-500");
           });
-          btn.classList.add("bg-white", "shadow-sm", "text-indigo-600");
+          btn.classList.add("bg-white", "shadow-sm", "text-gray-600");
           btn.classList.remove("text-slate-500");
         });
       });

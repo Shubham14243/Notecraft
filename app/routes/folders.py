@@ -1,14 +1,13 @@
+import logging
 from datetime import datetime
 from flask import Blueprint, request, render_template, flash, redirect, session, url_for
+
 from app.utils import Validator
 from app.models import User, Folder, MarkdownFile
 from app import db
-from app import bcrypt
-import logging
 
 bp = Blueprint('folder', __name__)
 
-# Set up logging
 logger = logging.getLogger(__name__)
 
 @bp.route('/view/<int:folder_id>', methods=['GET'])
@@ -26,16 +25,20 @@ def view_folder(folder_id):
         
         session["path"] = session.get("path", [{"id": user.get("root_folder_id"), "name": "Home"}])
         if any(f.get("id") == folder_id for f in session["path"]):
-            # If folder is already in path, trim the path to that folder
             session["path"] = session["path"][:next(i for i, f in enumerate(session["path"]) if f.get("id") == folder_id) + 1]
         else:
             session["path"] = session.get("path", [{"id": user.get("root_folder_id"), "name": "Home"}]) + [{"id": folder_id, "name": folder.name}]
         session["current_folder_id"] = folder_id
         
+        fav = request.args.get("fav")
+        
         folders = Folder.query.filter_by(user_id=user.get("id"), parent_id=folder_id).all()
         folders.sort(key=lambda f: f.created_at, reverse=True)
         
-        files = MarkdownFile.query.filter_by(folder_id=folder_id).all()
+        if fav == "true":
+            files = MarkdownFile.query.filter_by(folder_id=folder_id,favorite=True).all()
+        else:
+            files = MarkdownFile.query.filter_by(folder_id=folder_id).all()
         files.sort(key=lambda f: f.updated_at, reverse=True)
         
         return render_template('dashboard.html', flag="folder", user=user, folders=folders, files=files)
@@ -130,7 +133,6 @@ def delete_folder():
             return redirect(url_for("auth.login"))
         
         folder_id = request.form['folder_id']
-        
         
         folder = Folder.query.get(folder_id)
         if not folder:

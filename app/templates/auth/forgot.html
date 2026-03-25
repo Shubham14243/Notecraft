@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>NoteCraft | Sign In</title>
+    <title>NoteCraft | Forgot Password</title>
     <!-- BEGIN: External Scripts -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
@@ -155,14 +155,12 @@
         <div class="max-w-md w-full mx-auto fade-in" id="signin-section">
           <div class="mb-10">
             <h2 class="text-3xl font-bold tracking-tight text-neutral-900">
-              Sign In
+              Forgot Password
             </h2>
-            <p class="mt-2 text-neutral-600">
-              Welcome back! Please enter your details.
-            </p>
+            <p class="mt-2 text-neutral-600">Please enter your details.</p>
           </div>
           <form
-            action="{{ url_for('auth.login') }}"
+            action="{{ url_for('auth.forgot_password') }}"
             class="space-y-6"
             method="POST"
           >
@@ -184,43 +182,12 @@
                 />
               </div>
             </div>
-            <div>
-              <label
-                class="block text-sm font-medium text-neutral-700"
-                for="password"
-                >Password</label
-              >
-              <div class="mt-1">
-                <input
-                  autocomplete="current-password"
-                  class="block w-full appearance-none rounded-lg border border-neutral-300 px-3 py-3 placeholder-neutral-400 shadow-sm focus:border-neutral-900 focus:outline-none focus:ring-neutral-900 sm:text-sm"
-                  id="password"
-                  name="password"
-                  placeholder="••••••••"
-                  required=""
-                  type="password"
-                />
-              </div>
-            </div>
-            <div class="flex items-center justify-between">
-              <div class="flex items-center">
-                <input
-                  class="h-4 w-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900"
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                />
-                <label
-                  class="ml-2 block text-sm text-neutral-700"
-                  for="remember-me"
-                  >Remember me</label
-                >
-              </div>
+            <div class="flex items-center justify-end">
               <div class="text-sm">
                 <a
                   class="font-medium text-neutral-600 hover:text-neutral-900 transition-colors"
-                  href="{{ url_for('auth.forgot_password') }}"
-                  >Forgot password?</a
+                  href="{{ url_for('auth.login') }}"
+                  >Login Instead?</a
                 >
               </div>
             </div>
@@ -229,7 +196,7 @@
                 class="flex w-full justify-center rounded-lg bg-neutral-900 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 transition-all"
                 type="submit"
               >
-                Sign In
+                Submit
               </button>
             </div>
           </form>

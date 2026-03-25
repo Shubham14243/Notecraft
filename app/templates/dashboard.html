@@ -109,17 +109,27 @@
             </a>
           </div>
           <nav class="space-y-1">
-            <!-- Main Links -->
+            <!-- All Notes -->
             <a
-              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-black bg-gray-100 rounded group"
-              href="#"
+              href="{% if flag == 'folder' %}
+                {{ url_for('folder.view_folder', folder_id=session.get('current_folder_id')) }}
+              {% else %}
+                {{ url_for('main.home') }}
+              {% endif %}"
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded group {% if request.args.get('fav') == 'true' %} text-gray-500 hover:bg-gray-50 hover:text-black {% else %} text-black bg-gray-100 {% endif %}"
             >
               <i class="w-4 h-4" data-lucide="layout-grid"></i>
               All Notes
             </a>
+
+            <!-- Favorites -->
             <a
-              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-black rounded group"
-              href="#"
+              href="{% if flag == 'folder' %}
+                {{ url_for('folder.view_folder', folder_id=session.get('current_folder_id'), fav='true') }}
+              {% else %}
+                {{ url_for('main.home', fav='true') }}
+              {% endif %}"
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded group {% if request.args.get('fav') == 'true' %} text-black bg-gray-100 {% else %} text-gray-500 hover:bg-gray-50 hover:text-black {% endif %}"
             >
               <i class="w-4 h-4" data-lucide="star"></i>
               Favorites
@@ -264,7 +274,7 @@
                         id="folder_name"
                         name="folder_name"
                         placeholder="Enter folder name"
-                        required=""
+                        value="New folder"
                         type="text"
                       />
                     </div>
@@ -315,7 +325,7 @@
                         id="file_name"
                         name="file_name"
                         placeholder="Enter Note Name"
-                        required=""
+                        value="New Note"
                         type="text"
                       />
                     </div>
@@ -508,16 +518,28 @@
                     <i class="w-5 h-5 text-black" data-lucide="file-text"></i>
                   </div>
                   <div class="flex flex-row items-center gap-4">
-                    <button
-                      class="text-gray-500 hover:text-black transition-colors"
+                    <form
+                      class=""
+                      action="{{ url_for('file.mark_file') }}"
+                      method="POST"
                     >
-                      <i class="w-4 h-4" data-lucide="star"></i>
-                    </button>
+                      <input type="hidden" name="file_id" value="{{file.id}}" />
+                      <button
+                        type="submit"
+                        class="text-gray-800 hover:text-black transition-colors"
+                      >
+                        {% if file.favorite %}
+                        <i class="bi bi-star-fill"></i>
+                        {% else %}
+                        <i class="bi bi-star"></i>
+                        {% endif %}
+                      </button>
+                    </form>
                     <button
                       onclick="share_modal{{file.id}}.showModal()"
-                      class="text-gray-500 hover:text-black transition-colors"
+                      class="text-gray-800 hover:text-black transition-colors"
                     >
-                      <i class="bi bi-share"></i>
+                      <i class="bi bi-share-fill"></i>
                     </button>
                     <dialog id="share_modal{{file.id}}" class="modal">
                       <div class="modal-box">
@@ -528,9 +550,48 @@
                             ✕
                           </button>
                         </form>
-                        <h3 class="text-lg font-bold">
-                          Share - {{ file.title }}.md
-                        </h3>
+                        <div class="flex flex-row items-center justify-start">
+                          <h3 class="text-lg font-bold">
+                            Share - {{ file.title }}.md
+                          </h3>
+                          {% if file.sharing %}
+                          <form
+                            class="px-3"
+                            action="{{ url_for('file.refresh_url') }}"
+                            method="POST"
+                          >
+                            <input
+                              type="hidden"
+                              name="file_id"
+                              value="{{file.id}}"
+                            />
+                            <button
+                              type="submit"
+                              class="px-2 py-0.5 border border-gray-800 text-gray-800 text-[10px] font-bold rounded"
+                            >
+                              <i class="bi bi-arrow-clockwise"></i> Refresh URL
+                            </button>
+                          </form>
+                          <form
+                            class=""
+                            action="{{ url_for('file.file_sharing') }}"
+                            method="POST"
+                          >
+                            <input
+                              type="hidden"
+                              name="file_id"
+                              value="{{file.id}}"
+                            />
+                            <button
+                              type="submit"
+                              class="px-2 py-0.5 border border-gray-800 bg-red-300 text-gray-800 text-[10px] font-bold rounded"
+                            >
+                              <i class="bi bi-x-lg"></i> Disable Sharing
+                            </button>
+                          </form>
+                          {% endif %}
+                        </div>
+                        {% if file.sharing %}
                         <div
                           class="flex flex-row align-center justify-between bg-gray-200 p-4 rounded mt-4"
                         >
@@ -544,12 +605,34 @@
                             <i class="bi bi-copy"></i>
                           </button>
                         </div>
+                        {% else %}
+                        <div class="flex flex-row items-center justify-between">
+                          <p class="p-4">Enable File sharing?</p>
+                          <form
+                            class="px-3"
+                            action="{{ url_for('file.file_sharing') }}"
+                            method="POST"
+                          >
+                            <input
+                              type="hidden"
+                              name="file_id"
+                              value="{{file.id}}"
+                            />
+                            <button
+                              type="submit"
+                              class="px-2 py-0.5 border border-gray-800 bg-green-300 text-gray-800 text-[10px] font-bold rounded"
+                            >
+                              <i class="bi bi-check"></i> Enable
+                            </button>
+                          </form>
+                        </div>
+                        {% endif %}
                       </div>
                     </dialog>
                     <div class="dropdown dropdown-end">
                       <div tabindex="0" role="button" class="m-1">
                         <i
-                          class="w-4 h-4 text-gray-900 opacity-80 group-hover:opacity-100"
+                          class="w-4 h-4 text-gray-900 opacity-100 group-hover:opacity-100"
                           data-lucide="more-vertical"
                         ></i>
                       </div>

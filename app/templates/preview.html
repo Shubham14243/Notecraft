@@ -33,6 +33,39 @@
         class="flex-1 flex flex-col min-w-0 bg-white overflow-y-auto"
         data-purpose="main-content"
       >
+        {% if not file %}
+        <div class="flex items-center justify-center h-full mt-10">
+          <div
+            class="max-w-md w-full bg-white border border-gray-200 rounded-xl shadow-sm p-6 text-center"
+          >
+            <div class="flex justify-center mb-4">
+              <i class="bi bi-exclamation-circle text-4xl text-red-500"></i>
+            </div>
+
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">
+              {% if status == 0 %} File Not Found {% elif status == -1 %} Access
+              Error {% else %} Something Went Wrong {% endif %}
+            </h2>
+
+            <p class="text-sm text-gray-500 mb-4">
+              {% if status == 0 %} The requested file could not be located. It
+              may have been removed or does not exist. {% elif status == -1 %}
+              You do not have permission to access this file, or the link may no
+              longer be valid. {% else %} An unexpected error occurred. Please
+              try again later. {% endif %}
+            </p>
+
+            <a
+              href="{{ url_for('main.home') }}"
+              class="inline-flex items-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-md hover:bg-gray-800 transition"
+            >
+              <i class="bi bi-arrow-left"></i>
+              Go Back
+            </a>
+          </div>
+        </div>
+        {% else %}
+
         <!-- Document Content -->
         <article class="max-w-[1000px] mx-auto w-full px-8 py-10">
           <!-- Metadata Header -->
@@ -90,6 +123,7 @@
             <div id="preview-area"></div>
           </section>
         </article>
+        {% endif %}
       </main>
     </div>
     <script src="{{ url_for('static', filename='js/markdown.js') }}"></script>

@@ -6,6 +6,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    reset_token = db.Column(db.String(512), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
     root_folder_id = db.Column(db.Integer, db.ForeignKey('folder.id'))
     
@@ -54,6 +55,7 @@ class MarkdownFile(db.Model):
     public_key = db.Column(db.String(255), nullable=False, unique=True)
     author = db.Column(db.String(80), nullable=True)
     favorite = db.Column(db.Boolean, default=False)
+    sharing = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
     

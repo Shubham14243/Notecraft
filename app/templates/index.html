@@ -17,6 +17,10 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
     <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -40,7 +44,7 @@
         },
       };
     </script>
-    <title>MarkNotes - Markdown Writing, Refined</title>
+    <title>NoteCraft - Markdown Writing, Refined</title>
   </head>
   <body
     class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 transition-colors duration-200"
@@ -52,40 +56,60 @@
       >
         <div class="flex items-center gap-3">
           <div
-            class="flex items-center justify-center bg-primary rounded-lg p-2 text-white"
+            class="flex items-center justify-center bg-black rounded-lg p-2 text-white"
           >
-            <span class="material-symbols-outlined">edit_note</span>
+            <a href="{{ url_for('main.index') }}">
+              <svg
+                class="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path>
+              </svg>
+            </a>
           </div>
-          <h2 class="text-xl font-black tracking-tight uppercase">MarkNotes</h2>
+          <a href="{{ url_for('main.index') }}"
+            ><h2 class="text-xl font-black tracking-tight uppercase">
+              NoteCraft
+            </h2></a
+          >
         </div>
         <div class="hidden md:flex items-center gap-10">
           <a
             class="text-sm font-semibold hover:text-primary transition-colors"
-            href="#"
+            href="#features"
             >Features</a
           >
           <a
             class="text-sm font-semibold hover:text-primary transition-colors"
-            href="#"
+            href="#pricing"
             >Pricing</a
           >
           <a
             class="text-sm font-semibold hover:text-primary transition-colors"
-            href="#"
+            href="#about"
             >About</a
           >
         </div>
         <div class="flex items-center gap-4">
-          <button
+          <a
+            href="{{ url_for('auth.login') }}"
             class="hidden sm:flex text-sm font-bold px-4 py-2 hover:opacity-80 transition-opacity"
           >
             Login
-          </button>
-          <button
-            class="bg-primary text-white rounded-xl px-6 py-2.5 text-sm font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform"
+          </a>
+          <a
+            href="{{ url_for('auth.signup') }}"
+            class="bg-black text-white rounded-xl px-6 py-2.5 text-sm font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform"
           >
             Get Started
-          </button>
+          </a>
         </div>
       </header>
       <main class="flex-1">
@@ -112,21 +136,16 @@
                   class="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed mb-10"
                 >
                   Experience a minimalist editor designed for pure focus. Write
-                  in Zen mode, preview in real-time, and own your digital
+                  in zen mode, preview in real-time, and own your digital
                   garden.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4">
-                  <button
+                  <a
+                    href="{{ url_for('auth.signup') }}"
                     class="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl px-8 py-4 text-lg font-bold hover:opacity-90 transition-opacity"
                   >
                     Start Writing Free
-                  </button>
-                  <button
-                    class="flex items-center justify-center gap-2 border-2 border-slate-200 dark:border-slate-800 rounded-xl px-8 py-4 text-lg font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                  >
-                    <span class="material-symbols-outlined">play_circle</span>
-                    See Demo
-                  </button>
+                  </a>
                 </div>
                 <div class="mt-12 flex items-center gap-4 opacity-60">
                   <div class="flex -space-x-3">
@@ -184,7 +203,10 @@
           </div>
         </section>
         <!-- Features Grid -->
-        <section class="px-6 md:px-20 py-24 bg-white dark:bg-[#1a110c]">
+        <section
+          class="px-6 md:px-20 py-24 bg-white dark:bg-[#1a110c]"
+          id="features"
+        >
           <div class="max-w-7xl mx-auto">
             <div
               class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8"
@@ -207,92 +229,107 @@
               </p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <!-- Feature 1 -->
               <div
-                class="group p-8 rounded-2xl border border-slate-100 dark:border-slate-800 bg-background-light dark:bg-background-dark hover:border-primary/50 transition-all hover:shadow-2xl hover:shadow-primary/5"
+                class="group flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:border-primary hover:shadow-xl"
               >
                 <div
-                  class="w-14 h-14 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center mb-8 group-hover:bg-primary group-hover:text-white transition-colors"
+                  class="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-900 text-white group-hover:bg-primary transition-colors"
                 >
                   <span class="material-symbols-outlined text-3xl"
-                    >visibility_off</span
+                    >energy_savings_leaf</span
                   >
                 </div>
-                <h4 class="text-2xl font-bold mb-4">Zen Mode</h4>
-                <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Eliminate distractions with a full-screen interface that puts
-                  your words front and center. No toolbars, no noise.
-                </p>
+                <div class="flex flex-col gap-2">
+                  <h3 class="text-xl font-bold text-slate-900">Zen Mode</h3>
+                  <p class="text-slate-600 leading-relaxed">
+                    A completely clutter-free environment designed for deep
+                    focus and uninterrupted thought flow.
+                  </p>
+                </div>
               </div>
-              <!-- Feature 2 -->
               <div
-                class="group p-8 rounded-2xl border border-slate-100 dark:border-slate-800 bg-background-light dark:bg-background-dark hover:border-primary/50 transition-all hover:shadow-2xl hover:shadow-primary/5"
+                class="group flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:border-primary hover:shadow-xl"
               >
                 <div
-                  class="w-14 h-14 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center mb-8 group-hover:bg-primary group-hover:text-white transition-colors"
+                  class="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-900 text-white group-hover:bg-primary transition-colors"
                 >
                   <span class="material-symbols-outlined text-3xl"
                     >vertical_split</span
                   >
                 </div>
-                <h4 class="text-2xl font-bold mb-4">Split-Pane Preview</h4>
-                <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-                  See your rendered markdown instantly. Our high-performance
-                  engine ensures zero lag between typing and seeing.
-                </p>
+                <div class="flex flex-col gap-2">
+                  <h3 class="text-xl font-bold text-slate-900">
+                    Split-Pane Preview
+                  </h3>
+                  <p class="text-slate-600 leading-relaxed">
+                    Real-time rendering side-by-side with your syntax. See your
+                    formatting as it happens.
+                  </p>
+                </div>
               </div>
-              <!-- Feature 3 -->
               <div
-                class="group p-8 rounded-2xl border border-slate-100 dark:border-slate-800 bg-background-light dark:bg-background-dark hover:border-primary/50 transition-all hover:shadow-2xl hover:shadow-primary/5"
+                class="group flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:border-primary hover:shadow-xl"
               >
                 <div
-                  class="w-14 h-14 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center mb-8 group-hover:bg-primary group-hover:text-white transition-colors"
+                  class="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-900 text-white group-hover:bg-primary transition-colors"
                 >
                   <span class="material-symbols-outlined text-3xl"
-                    >dark_mode</span
+                    >description</span
                   >
                 </div>
-                <h4 class="text-2xl font-bold mb-4">OLED Dark Mode</h4>
-                <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-                  A beautiful, high-contrast dark theme designed specifically to
-                  reduce eye strain during midnight inspiration sessions.
-                </p>
+                <div class="flex flex-col gap-2">
+                  <h3 class="text-xl font-bold text-slate-900">
+                    Markdown Native
+                  </h3>
+                  <p class="text-slate-600 leading-relaxed">
+                    Built on standard Markdown for complete portability. No
+                    lock-in, just clean plain text files.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </section>
         <!-- CTA Section -->
-        <section class="px-6 md:px-20 py-24">
+        <section
+          class="py-24 bg-slate-900 px-8 lg:px-20 text-center mb-24 overflow-hidden relative"
+          id="about"
+        >
           <div
-            class="relative max-w-5xl mx-auto rounded-[2rem] overflow-hidden bg-slate-900 dark:bg-primary text-white p-12 md:p-20 text-center"
+            class="absolute inset-0 opacity-10 pointer-events-none"
+            data-alt="Subtle abstract line pattern background"
           >
             <div
-              class="absolute top-0 right-0 p-10 opacity-10 pointer-events-none"
+              class="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:40px_40px]"
+            ></div>
+          </div>
+          <div class="relative z-10 flex flex-col items-center gap-8">
+            <h2
+              class="text-3xl lg:text-4xl font-black text-white tracking-tight"
             >
-              <span class="material-symbols-outlined text-[200px]"
-                >format_quote</span
-              >
+              About
+            </h2>
+            <div class="h-1 w-12 bg-primary"></div>
+            <p
+              class="max-w-3xl text-slate-300 text-xl font-light leading-relaxed"
+            >
+              NoteCraft is built on the principle that your tools should never
+              compete for your attention. By stripping away the non-essential,
+              we create a space where thoughts can flow freely from mind to
+              digital ink. High contrast, monochromatic aesthetics, and
+              intentional whitespace are at the core of our identity.
+            </p>
+            <div class="mt-4 flex items-center gap-2 text-primary font-bold">
+              <span class="material-symbols-outlined">ink_pen</span>
+              <span>Crafted for writers, by writers.</span>
             </div>
-            <div class="relative z-10">
-              <h2 class="text-4xl md:text-6xl font-black mb-8 tracking-tighter">
-                Ready to start writing?
-              </h2>
-              <p
-                class="text-lg md:text-xl opacity-80 mb-12 max-w-2xl mx-auto font-medium"
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+              <a
+                href="{{ url_for('auth.signup') }}"
+                class="bg-white text-slate-900 rounded-xl px-10 py-4 text-lg font-black hover:scale-105 transition-transform shadow-xl"
               >
-                Join the community of developers, writers, and thinkers who have
-                found their focus with MarkNotes.
-              </p>
-              <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <button
-                  class="bg-white text-slate-900 rounded-xl px-10 py-4 text-lg font-black hover:scale-105 transition-transform shadow-xl"
-                >
-                  Create Your First Note
-                </button>
-              </div>
-              <p class="mt-8 text-sm opacity-60">
-                No credit card required. Free forever plan available.
-              </p>
+                Create Your First Note
+              </a>
             </div>
           </div>
         </section>
@@ -308,10 +345,22 @@
             <div
               class="flex items-center justify-center bg-slate-900 dark:bg-white rounded p-1.5 text-white dark:text-slate-900"
             >
-              <span class="material-symbols-outlined text-sm">edit_note</span>
+              <svg
+                class="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path>
+              </svg>
             </div>
             <h2 class="text-lg font-black tracking-tight uppercase">
-              MarkNotes
+              NoteCraft
             </h2>
           </div>
           <div class="flex gap-8 text-sm font-bold text-slate-500">
@@ -325,10 +374,14 @@
             <a class="hover:text-primary transition-colors" href="#">Github</a>
           </div>
           <p class="text-sm text-slate-400">
-            © 2024 MarkNotes Inc. Built for focus.
+            © <span id="year"></span> NoteCraft Inc. Built for focus.
           </p>
         </div>
       </footer>
     </div>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
   </body>
 </html>
