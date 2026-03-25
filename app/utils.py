@@ -4,6 +4,10 @@ from app.config import Config
 import datetime
 import jwt
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class Validator:
     
@@ -91,6 +95,8 @@ class SendMail:
 
             if data.get('recipient') == None or data.get('username') == None or data.get('reset_url') == None:
                 return False
+            
+            logger.info(f'Reset-username-{data.get('username')}')
             
             body = {
                 "template_id": "3",
